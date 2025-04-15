@@ -27,13 +27,6 @@ public class SimpleWeapon : MonoBehaviour, IWeapon
     public string WeaponName => _weaponName;
     public bool IsLeftWeapon => _isLeftWeapon;
     public bool IsReloading => _isReloading;
-    public InputActionReference _leftShootRef;
-    public InputActionReference _rightShootRef;
-    public InputActionReference _leftReloadRef;
-    public InputActionReference _rightReloadRef;
-
-    InputAction _shootRef;
-    InputAction _reloadRef;
 
     void Start()
     {
@@ -50,10 +43,6 @@ public class SimpleWeapon : MonoBehaviour, IWeapon
         _currentReserveSize = _maxReserveSize;
         _currentAmmo = _magSize;
         _lastTimeSinceFire = _firingCooldown;
-        _shootRef = (_isLeftWeapon ? _leftShootRef : _rightShootRef).action;
-        _reloadRef = (_isLeftWeapon ? _leftReloadRef : _rightReloadRef).action;
-        _shootRef.Enable();
-        _reloadRef.Enable();
         _animator = GetComponent<Animator>();
     }
 
@@ -70,11 +59,19 @@ public class SimpleWeapon : MonoBehaviour, IWeapon
         }
 
 
-        if(_shootRef.ReadValue<float>() > 0 && _lastTimeSinceFire >= _firingCooldown)
+        if(InputManager.Instance.ShootingLeft && _isLeftWeapon && _lastTimeSinceFire >= _firingCooldown)
         {
             Fire();
         }
-        if(_reloadRef.triggered && _currentAmmo < _magSize && _currentReserveSize > 0)
+        if (InputManager.Instance.ShootingRight && !_isLeftWeapon && _lastTimeSinceFire >= _firingCooldown)
+        {
+            Fire();
+        }
+        if (InputManager.Instance.ReloadLeft && _isLeftWeapon && _currentAmmo < _magSize && _currentReserveSize > 0)
+        {
+            StartCoroutine(Reload());
+        }
+        if (InputManager.Instance.ReloadRight && !_isLeftWeapon && _currentAmmo < _magSize && _currentReserveSize > 0)
         {
             StartCoroutine(Reload());
         }
@@ -132,10 +129,5 @@ public class SimpleWeapon : MonoBehaviour, IWeapon
             _currentReserveSize = 0;
         }
         _isReloading = false;
-    }
-    private void OnDisable()
-    {
-        _shootRef.Disable();
-        _reloadRef.Disable();
     }
 }

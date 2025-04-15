@@ -13,7 +13,7 @@ public class SimpleEnemy : MonoBehaviour, IDamageableEntity
     float _pushStrength = 10;
     float _timeUntilJump = 1;
     float _lastJumpTime = 0;
-    float _jumpPower = 17;
+    float _jumpPower = 20;
     float _dashPower = 10;
     int _damage = 17;
     bool _isHealing = false;
@@ -103,7 +103,7 @@ public class SimpleEnemy : MonoBehaviour, IDamageableEntity
     }
     void WaitForJump()
     {
-        if(_playerPos.position.y > transform.position.y && _rb.velocity.magnitude <= 0.4f)
+        if(_playerPos.position.y > transform.position.y && _rb.velocity.magnitude <= 2f)
         {
             if(_lastJumpTime < _timeUntilJump)
             {
@@ -118,8 +118,11 @@ public class SimpleEnemy : MonoBehaviour, IDamageableEntity
     }
     IEnumerator JumpToPlayer()
     {
-        _rb.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse);
-        yield return new WaitForSeconds(0.25f);
-        _rb.AddForce(transform.forward * _dashPower, ForceMode.Impulse);
+        _rb.AddForce(-transform.forward.normalized * 7, ForceMode.VelocityChange);
+        yield return new WaitForSeconds(0.15f);
+        _rb.AddForce(Vector3.up * _jumpPower, ForceMode.VelocityChange);
+        yield return new WaitForSeconds(0.35f);
+        _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
+        _rb.AddForce(transform.forward.normalized * _dashPower, ForceMode.VelocityChange);
     }
 }

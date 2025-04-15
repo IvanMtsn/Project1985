@@ -26,7 +26,7 @@ public class SimpleSpecialWeapon : MonoBehaviour, ISpecialWeapon
         {
             _lastTimeSinceFire += Time.deltaTime;
         }
-        if((_fireSpecialRef.action.triggered && _lastTimeSinceFire >= _firingCooldown) && !_isFiring)
+        if((InputManager.Instance.ShootSpecial && _lastTimeSinceFire >= _firingCooldown) && !_isFiring)
         {
             _lastTimeSinceFire = 0;
             Fire();

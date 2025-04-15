@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     float _controllerSensitivityHorizontal = 1f;
     float _controllerSensitivityVertical = 0.6f;
     float _dashDuraton = 0.35f;
+    float _dashInvincibilityDuration = 0.2f;
     public float DashCooldown { get; private set; } = 2f;
     float _AngleUntilSlope = 0.01f;
     public float LastTimeSinceDash { get; private set; }
@@ -26,10 +27,10 @@ public class PlayerMovement : MonoBehaviour
     Vector2 _lookInput;
     bool _isGrounded = true;
     public bool CanDash { get; private set; } = true;
-    public bool _isDashing { get; private set; } = false;
-    [SerializeField]LayerMask _groundLayer;
-    public InputActionReference _moveReference;
-    public InputActionReference _lookReference;    
+    public bool IsDashing { get; private set; } = false;
+    public bool IsInvincible { get;private set; } = false;
+    public System.Action OnDashEnd;
+    [SerializeField]LayerMask _groundLayer; 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -46,6 +47,12 @@ public class PlayerMovement : MonoBehaviour
                 CanDash = true;
             }
         }
+        if (InputManager.Instance.Dash && CanDash && _rb.velocity != Vector3.zero && _isGrounded)
+        {
+            _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
+            Vector3 dashDir = new Vector3(_movementInput.x, 0, _movementInput.y);
+            StartCoroutine(Dash(dashDir));
+        }
         Movement();
     }
     private void FixedUpdate()
@@ -55,6 +62,9 @@ public class PlayerMovement : MonoBehaviour
     private void Movement()
     {
         // taking movement input
+        _movementInput = InputManager.Instance.Move;
+        _lookInput = InputManager.Instance.Look;
+
         _moveDirection = new Vector3(_movementInput.x, 0, _movementInput.y);
         //moveDirection MUST not be normalized for controller smooth movement to work, but it must be normalized if someone plays w keyboard
         if(_moveDirection.magnitude > 1)
@@ -64,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
         // taking mouse movement for looking
         //checks active device, ? is for making sure null is returned instead of a crash occuring
-        var device = _lookReference.action.activeControl?.device;
+        var device = InputManager.Instance.InputActions.Player.Look.activeControl?.device;
         float sensitivityHorizontal;
         float sensitivityVertical;
         switch (device)
@@ -103,39 +113,26 @@ public class PlayerMovement : MonoBehaviour
         _rb.MoveRotation(rotX);
         PlayerCam.transform.localRotation = Quaternion.Euler(_rotation, 0, 0);
     }
-    void OnMove()
-    {
-        _movementInput = _moveReference.action.ReadValue<Vector2>();
-    }
-    void OnLook()
-    {
-        _lookInput = _lookReference.action.ReadValue<Vector2>();
-    }
-    private void OnDash()
-    {
-        if (CanDash && _rb.velocity != Vector3.zero && _isGrounded)
-        {
-            _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
-            Vector3 dashDir = new Vector3(_movementInput.x, 0, _movementInput.y);
-            StartCoroutine(Dash(dashDir));
-        }
-    }
     IEnumerator Dash(Vector3 direction)
     {
         CanDash = false;
-        _isDashing = true;
+        IsDashing = true;
+        IsInvincible = true;
         LastTimeSinceDash = 0;
-        Physics.IgnoreLayerCollision(3, 7, true);
         Vector3 dashVelocity = transform.TransformDirection(direction.normalized) * _propulsionForce;
         float timer = 0;
         while(timer < _dashDuraton)
         {
+            if(timer >= _dashInvincibilityDuration)
+            {
+                IsInvincible = false;
+            }
             _rb.velocity += dashVelocity;
             timer += Time.deltaTime;
             yield return null;
         }
-        _isDashing = false;
-        Physics.IgnoreLayerCollision(3, 7, false);
+        IsDashing = false;
+        OnDashEnd?.Invoke();
     }
     bool IsOnSlope(out Vector3 slopeDirection)
     {
@@ -145,7 +142,7 @@ public class PlayerMovement : MonoBehaviour
         if(Physics.Raycast(origin, Vector3.down, out hit, 0.3f, _groundLayer))
         {
             float angle = Vector3.Angle(hit.normal, Vector3.up);
-            if(angle > _AngleUntilSlope)
+            if(angle > _AngleUntilSlope && angle < 45)
             {
                 slopeDirection = Vector3.ProjectOnPlane(_moveRelative, hit.normal).normalized;
                 Debug.Log("geht");
@@ -153,15 +150,5 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         return false;
-    }
-    private void OnEnable()
-    {
-        _moveReference.action.Enable();
-        _lookReference.action.Enable();
-    }
-    private void OnDisable()
-    {
-        _moveReference.action.Disable();
-        _lookReference.action.Disable();
     }
 }

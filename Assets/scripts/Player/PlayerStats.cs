@@ -31,10 +31,8 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
     }
     public void TakeDamage(float damage)
     {
-        if (GetComponent<PlayerMovement>()._isDashing)
-        {
-            return;
-        }
+        if (GetComponent<PlayerMovement>().IsInvincible) { return; }
+
         onDamageTaken?.Invoke(damage);
         Health -=damage;
         _currentHealTimer = 0;
