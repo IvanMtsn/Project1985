@@ -16,8 +16,6 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
     {
         Health = MaxHealth;
     }
-
-    // Update is called once per frame
     void Update()
     {
         if((_currentHealTimer < _timerUntilHeal) && (Health < MaxHealth) && !_isHealing)

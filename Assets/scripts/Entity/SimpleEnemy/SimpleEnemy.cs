@@ -93,7 +93,7 @@ public class SimpleEnemy : MonoBehaviour, IDamageableEntity
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            if(_rb.velocity.magnitude >= 3)
+            if(_rb.linearVelocity.magnitude >= 3)
             {
                 Vector3 pushDirection = (transform.position - collision.transform.position).normalized;
                 pushDirection.y = 0;
@@ -103,7 +103,7 @@ public class SimpleEnemy : MonoBehaviour, IDamageableEntity
     }
     void WaitForJump()
     {
-        if(_playerPos.position.y > transform.position.y && _rb.velocity.magnitude <= 2f)
+        if(_playerPos.position.y > transform.position.y && _rb.linearVelocity.magnitude <= 2f)
         {
             if(_lastJumpTime < _timeUntilJump)
             {
@@ -122,7 +122,7 @@ public class SimpleEnemy : MonoBehaviour, IDamageableEntity
         yield return new WaitForSeconds(0.15f);
         _rb.AddForce(Vector3.up * _jumpPower, ForceMode.VelocityChange);
         yield return new WaitForSeconds(0.35f);
-        _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
+        _rb.linearVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
         _rb.AddForce(transform.forward.normalized * _dashPower, ForceMode.VelocityChange);
     }
 }

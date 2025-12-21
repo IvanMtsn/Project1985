@@ -7,32 +7,30 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour
 {
-    [SerializeField]TMP_Text _healthText;
-    [SerializeField]TMP_Text _leftWeaponAmmo;
-    [SerializeField]TMP_Text _rightWeaponAmmo;
-    [SerializeField]TMP_Text _leftWeaponReload;
-    [SerializeField]TMP_Text _rightWeaponReload;
-    [SerializeField]TMP_Text _leftWeaponReserve;
-    [SerializeField]TMP_Text _rightWeaponReserve;
+    [SerializeField] TMP_Text _healthText;
+    [SerializeField] TMP_Text _leftWeaponCurrentAmmo;
+    [SerializeField] TMP_Text _rightWeaponCurrentAmmo;
+    [SerializeField] TMP_Text _leftWeaponIsReloading;
+    [SerializeField] TMP_Text _rightWeaponIsReloading;
+    [SerializeField] TMP_Text _leftWeaponMagAmmo;
+    [SerializeField] TMP_Text _rightWeaponMagAmmo;
     [SerializeField] Image _dashIndicator;
     [SerializeField] Image _healthIndicator;
     PlayerStats _playerStats;
     PlayerMovement _playerMovement;
-    WeaponManager _weaponManager;
+    WeaponHandler _weaponHandler;
     void Start()
     {
         _playerStats = GetComponent<PlayerStats>();
         _playerMovement = GetComponent<PlayerMovement>();
-        _weaponManager = GetComponent<WeaponManager>();
+        _weaponHandler = GetComponent<WeaponHandler>();
         _healthIndicator.fillAmount = _playerStats.Health * 0.01f;
     }
-
-    // Update is called once per frame
     void Update()
     {
         DisplayStats();
-        DisplayAmmo(_weaponManager.LeftWeapon,_leftWeaponAmmo, _leftWeaponReload, _leftWeaponReserve);
-        DisplayAmmo(_weaponManager.RightWeapon, _rightWeaponAmmo, _rightWeaponReload, _rightWeaponReserve);
+        DisplayAmmo(_weaponHandler.LeftWeapon.GetComponent<BaseWeapon>(), _leftWeaponCurrentAmmo, _leftWeaponIsReloading, _leftWeaponMagAmmo);
+        DisplayAmmo(_weaponHandler.RightWeapon.GetComponent<BaseWeapon>(), _rightWeaponCurrentAmmo, _rightWeaponIsReloading, _rightWeaponMagAmmo);
     }
     void DisplayStats()
     {
@@ -40,18 +38,22 @@ public class PlayerUI : MonoBehaviour
         _healthIndicator.fillAmount = Mathf.Clamp(_playerStats.Health * 0.01f, 0, 1);
         _dashIndicator.fillAmount = Mathf.MoveTowards(_dashIndicator.fillAmount, (_playerMovement.LastTimeSinceDash / _playerMovement.DashCooldown), 6f * Time.deltaTime);
     }
-    void DisplayAmmo(IWeapon weapon, TMP_Text ammoText, TMP_Text reloadText, TMP_Text reserveText)
+    void DisplayAmmo(BaseWeapon weapon, TMP_Text loadedAmmoText, TMP_Text isReloadingText, TMP_Text magAmmoText)
     {
         if (weapon != null)
         {
-            ammoText.text = $"{weapon.CurrentAmmo}/{weapon.MagSize}";
-            reloadText.gameObject.SetActive(weapon.IsReloading);
-            reserveText.text = weapon.MaxAmmo.ToString();
+            loadedAmmoText.text = $"{weapon.CurrentLoadedAmmo}/{weapon.MaxLoadedAmmo}";
+            isReloadingText.gameObject.SetActive(weapon.IsReloading);
+            magAmmoText.text = weapon.CurrentMagAmmo.ToString();
         }
         else
         {
-            ammoText.text = "--/--";
-            reserveText.text = "---";
+            loadedAmmoText.text = "--/--";
+            magAmmoText.text = "---";
         }
+    }
+    void DisplayWeaponSwitchPrompt(bool leftWeapon, bool rightWeapon)
+    {
+
     }
 }

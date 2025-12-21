@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "Controls",
     "maps": [
         {
@@ -72,6 +73,42 @@
                     "name": "FireSpecial",
                     "type": "Button",
                     "id": "5310a109-ed21-45b6-8712-b187de30a445",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FirePressedLeft",
+                    "type": "Button",
+                    "id": "a804be77-7b4b-4ef8-b3ef-968db4de5828",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "FirePressedRight",
+                    "type": "Button",
+                    "id": "e726aebf-29bd-42a6-8168-8fc5913929cf",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchWeaponLeft",
+                    "type": "Button",
+                    "id": "6ed47d9b-e922-4638-893f-4845592be7c6",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SwitchWeaponRight",
+                    "type": "Button",
+                    "id": "40f9a189-85a0-4281-a64b-113db9cd0f87",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -296,6 +333,50 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "FireSpecial",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0bd9e8c-c312-4312-80e2-9dbfc7c13536",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FirePressedLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db2c1615-521a-49f4-8d52-ea1d69fece6a",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "FirePressedRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9888354a-8010-4fbc-a556-95f91fb32e40",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchWeaponLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9e84f760-e8fe-4b2d-b39d-aea06851d088",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchWeaponRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

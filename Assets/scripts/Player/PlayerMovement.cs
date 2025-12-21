@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    int _moveSpeed = 8;
+    public int MoveSpeed = 12;
     int _propulsionForce = 15;
     float _rotation = 0;
     float _rotationX = 0;
@@ -47,9 +47,9 @@ public class PlayerMovement : MonoBehaviour
                 CanDash = true;
             }
         }
-        if (InputManager.Instance.Dash && CanDash && _rb.velocity != Vector3.zero && _isGrounded)
+        if (InputManager.Instance.Dash && CanDash && _rb.linearVelocity != Vector3.zero && _isGrounded)
         {
-            _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
+            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);
             Vector3 dashDir = new Vector3(_movementInput.x, 0, _movementInput.y);
             StartCoroutine(Dash(dashDir));
         }
@@ -61,19 +61,15 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Movement()
     {
-        // taking movement input
         _movementInput = InputManager.Instance.Move;
         _lookInput = InputManager.Instance.Look;
 
         _moveDirection = new Vector3(_movementInput.x, 0, _movementInput.y);
-        //moveDirection MUST not be normalized for controller smooth movement to work, but it must be normalized if someone plays w keyboard
         if(_moveDirection.magnitude > 1)
         {
             _moveDirection = _moveDirection.normalized;
         }
 
-        // taking mouse movement for looking
-        //checks active device, ? is for making sure null is returned instead of a crash occuring
         var device = InputManager.Instance.InputActions.Player.Look.activeControl?.device;
         float sensitivityHorizontal;
         float sensitivityVertical;
@@ -95,20 +91,18 @@ public class PlayerMovement : MonoBehaviour
         _rotationX += _lookInput.x * sensitivityHorizontal;
         _rotation = Mathf.Clamp(_rotation, -89, 89);
 
-        // processing movement input
         _moveRelative = transform.TransformDirection(_moveDirection);
         if(IsOnSlope(out Vector3 slopeDirection))
         {
             _rb.useGravity = false;
-            _rb.velocity = slopeDirection * _moveSpeed;
+            _rb.linearVelocity = slopeDirection * MoveSpeed;
         }
         else
         {
             _rb.useGravity = true;
-            _rb.velocity = new Vector3(_moveRelative.x * _moveSpeed, _rb.velocity.y, _moveRelative.z * _moveSpeed);
+            _rb.linearVelocity = new Vector3(_moveRelative.x * MoveSpeed, _rb.linearVelocity.y, _moveRelative.z * MoveSpeed);
         }
 
-        // processing mouse input looking
         Quaternion rotX = Quaternion.Euler(0, _rotationX, 0);
         _rb.MoveRotation(rotX);
         PlayerCam.transform.localRotation = Quaternion.Euler(_rotation, 0, 0);
@@ -127,7 +121,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 IsInvincible = false;
             }
-            _rb.velocity += dashVelocity;
+            _rb.linearVelocity += dashVelocity;
             timer += Time.deltaTime;
             yield return null;
         }
@@ -145,7 +139,7 @@ public class PlayerMovement : MonoBehaviour
             if(angle > _AngleUntilSlope && angle < 45)
             {
                 slopeDirection = Vector3.ProjectOnPlane(_moveRelative, hit.normal).normalized;
-                Debug.Log("geht");
+                //Debug.Log("on slope rn");
                 return true;
             }
         }

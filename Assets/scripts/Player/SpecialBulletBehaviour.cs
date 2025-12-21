@@ -22,7 +22,7 @@ public class SpecialBulletBehaviour : MonoBehaviour
                 IDamageableEntity entity = other.gameObject.GetComponent<IDamageableEntity>();
 
                 Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-                rb.AddForce(_rb.velocity.normalized * _pushStrength, ForceMode.Impulse);
+                rb.AddForce(_rb.linearVelocity.normalized * _pushStrength, ForceMode.Impulse);
 
                 entity.TakeDamage(_bulletDamage);
             }

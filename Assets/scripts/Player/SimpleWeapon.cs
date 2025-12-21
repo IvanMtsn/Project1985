@@ -5,20 +5,19 @@ using UnityEngine.InputSystem;
 
 public class SimpleWeapon : MonoBehaviour, IWeapon
 {
-    float _projectileSpeed = 100;
     float _firingCooldown = 0.1f;
     float _lastTimeSinceFire;
     float _playerPosX;
-    float _bulletNumber = 0;
     bool _isLeftWeapon;
     bool _isReloading = false;
     int _currentAmmo;
     int _maxReserveSize = 300;
     int _currentReserveSize;
     int _magSize = 25;
+    int _damage = 1;
     string _weaponName;
-    [SerializeField] GameObject _projectile;
-    [SerializeField] GameObject _firingPoint;
+    [SerializeField] Transform _firingPoint;
+    [SerializeField] LayerMask _hitMask;
     Animator _animator;
     public int CurrentAmmo => _currentAmmo;
     public int MaxAmmo => _currentReserveSize;
@@ -59,11 +58,11 @@ public class SimpleWeapon : MonoBehaviour, IWeapon
         }
 
 
-        if(InputManager.Instance.ShootingLeft && _isLeftWeapon && _lastTimeSinceFire >= _firingCooldown)
+        if(InputManager.Instance.FiringLeft && _isLeftWeapon && _lastTimeSinceFire >= _firingCooldown)
         {
             Fire();
         }
-        if (InputManager.Instance.ShootingRight && !_isLeftWeapon && _lastTimeSinceFire >= _firingCooldown)
+        if (InputManager.Instance.FiringRight && !_isLeftWeapon && _lastTimeSinceFire >= _firingCooldown)
         {
             Fire();
         }
@@ -85,32 +84,32 @@ public class SimpleWeapon : MonoBehaviour, IWeapon
         }
         _animator.SetTrigger("shoot");
 
-        Quaternion rotationOfBullet = _firingPoint.transform.rotation * Quaternion.Euler(0, GetBulletRotationY(), 0);
+        if(Physics.Raycast(_firingPoint.position, _firingPoint.forward, out RaycastHit hit, 100, _hitMask))
+        {
+            if (hit.collider.CompareTag("Enemy"))
+            {
+                hit.collider.GetComponent<IDamageableEntity>().TakeDamage(_damage);
+            }
+        }
+        StartCoroutine(ShootTrail(_firingPoint.position, hit.point));
 
-        float offsetX = ((_bulletNumber + 1) % 2 == 0) ? -0.1f : 0.2f;
-        Vector3 firePointPos = new Vector3(_firingPoint.transform.position.x + offsetX, _firingPoint.transform.position.y, _firingPoint.transform.position.z);
-
-        GameObject projectile = Instantiate(_projectile, firePointPos, rotationOfBullet);
-        //projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * _projectileSpeed;
-        projectile.GetComponent<Rigidbody>().AddForce(projectile.transform.forward * _projectileSpeed, ForceMode.VelocityChange);
-        Debug.Log("Projectile Fired");
-
-        _bulletNumber++;
         _currentAmmo--;
         _lastTimeSinceFire = 0;
     }
-    float GetBulletRotationY()
+    IEnumerator ShootTrail(Vector3 start, Vector3 end)
     {
-        float temp;
-        if (_isLeftWeapon)
+        LineRenderer line = TrailPool.Instance.Get();
+        line.SetPosition(0, start);
+        line.SetPosition(1, end);
+
+        float t = 0;
+        while (t<0.3f)
         {
-            temp = Random.Range(-2, 8);
+            t += Time.deltaTime;
+            line.widthMultiplier = 1 - (t/0.2f);
+            yield return null;
         }
-        else
-        {
-            temp = Random.Range(-8, 2);
-        }
-        return temp;
+        TrailPool.Instance.Return(line);
     }
     IEnumerator Reload()
     {
