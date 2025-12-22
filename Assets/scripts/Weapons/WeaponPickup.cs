@@ -4,16 +4,14 @@ using UnityEngine;
 
 public class WeaponPickup : MonoBehaviour
 {
+    [SerializeField]float _currentLoadedAmmo;
+    [SerializeField]float _currentMagAmmo;
+    public float CurrentLoadedAmmo => _currentLoadedAmmo;
+    public float CurrentMagAmmo => _currentMagAmmo;
     public GameObject WeaponPrefab;
-    [SerializeField] Mesh WeaponModel;
-    [SerializeField] Texture WeaponTexture;
-    MeshRenderer _mr;
-    MeshFilter _mf;
-    private void Start()
+    public void SetAmmo(float currentLoadedAmmo, float currentMagAmmo)
     {
-        _mr = GetComponent<MeshRenderer>();
-        _mf = GetComponent<MeshFilter>();
-        _mr.material.mainTexture = WeaponTexture;
-        _mf.mesh = WeaponModel;
+        _currentLoadedAmmo = currentLoadedAmmo;
+        _currentMagAmmo = currentMagAmmo;
     }
 }
