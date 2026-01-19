@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 3118388619187832897}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.038724046, y: -0.26997185, z: -0.19672349}
+  m_LocalPosition: {x: 0, y: 0.996, z: -0}
   m_LocalScale: {x: 0.9089256, y: 0.90892506, z: 0.9089254}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -160,15 +160,16 @@ MonoBehaviour:
   _burstCooldown: 0
   _burstAmount: 0
   _reloadTime: 1.5
-  _damage: 6
+  _damage: 12
   _ammoCost: 1
-  _maxMagAmmo: 200
-  _currentMagAmmo: 200
-  _maxLoadedAmmo: 30
-  _currentLoadedAmmo: 30
+  _maxReserveAmmo: 120
+  _currentReserveAmmo: 75
+  _maxLoadedAmmo: 15
+  _currentLoadedAmmo: 15
   _visualFirePoint: {fileID: 8190411943286785392}
   _fireMode: 1
-  Weaponside: 0
+  _isDroppable: 1
+  WeaponsideOfWeapon: 0
   _maxShotDistance: 100
   _spreadAngle: 0.005
   _hitMask:

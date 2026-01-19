@@ -33,7 +33,12 @@ public class InputManager : MonoBehaviour
     public bool ReloadRight  => InputActions.Player.ReloadRight.WasPressedThisFrame();
     public bool SwitchWeaponLeft => InputActions.Player.SwitchWeaponLeft.WasPressedThisFrame();
     public bool SwitchWeaponRight => InputActions.Player.SwitchWeaponRight.WasPressedThisFrame();
-
+    public bool DropWeaponLeft => InputActions.Player.DropWeaponLeft.WasPressedThisFrame();
+    public bool DropWeaponRight => InputActions.Player.DropWeaponRight.WasPressedThisFrame();
+    public string GetBind(string action)
+    {
+        return InputActions.FindAction(action).GetBindingDisplayString();
+    }
     private void OnDisable()
     {
         if(InputActions != null)

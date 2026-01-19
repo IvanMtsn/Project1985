@@ -6,8 +6,6 @@ public class PlayerDashCollisionHandler : MonoBehaviour
 {
     PlayerMovement _player;
     [SerializeField] LayerMask _pushableObjectsMask;
-    [SerializeField] LayerMask _projectileMask;
-    float _pushForce = 2f;
     List<GameObject> _contactedObjects;
     void Start()
     {
@@ -21,9 +19,11 @@ public class PlayerDashCollisionHandler : MonoBehaviour
         if (CollisionUtils.IsLayerInMask(collision.gameObject.layer, _pushableObjectsMask) && !_contactedObjects.Contains(collision.gameObject))
         {
             _contactedObjects.Add(collision.gameObject);
-            Rigidbody rb = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 pushDirection = (collision.transform.position - transform.position).normalized;
-            rb.AddForce(pushDirection * _pushForce, ForceMode.Impulse);
+            if (collision.gameObject.CompareTag("Enemy"))
+            {
+                collision.gameObject.GetComponent<Enemy>().HeavyHit(collision.transform.position-transform.position, true);
+                _player.EndDash();
+            }
         }
     }
     void ClearContactedObjects() => _contactedObjects.Clear();

@@ -171,7 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fdd09be588d42428c82af5fa492fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentLoadedAmmo: 0
+  _currentReserveAmmo: 0
+  _weaponIcon: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   WeaponPrefab: {fileID: 8682566852438128596, guid: dbeae50a6634a4848b34284a5e7d68f8,
     type: 3}
-  WeaponModel: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  WeaponTexture: {fileID: 2800000, guid: dffef66376be4fa480fb02b19edbe903, type: 3}

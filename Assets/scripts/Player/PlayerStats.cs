@@ -8,10 +8,11 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
 {
     public float MaxHealth { get; } = 100;
     public float Health { get; private set; }
-    public event Action<float> onDamageTaken;
     float _timerUntilHeal = 5;
     float _currentHealTimer;
     bool _isHealing = false;
+    bool _isInvincible = false;
+    float _hitInvincibleTimer = 0.3f; 
     void Start()
     {
         Health = MaxHealth;
@@ -29,9 +30,9 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
     }
     public void TakeDamage(float damage)
     {
-        if (GetComponent<PlayerMovement>().IsInvincible) { return; }
-
-        onDamageTaken?.Invoke(damage);
+        if (_isInvincible) { return; }
+        Invicibility(_hitInvincibleTimer);
+        EffectsManager.Instance.ShakeCamera(damage);
         Health -=damage;
         _currentHealTimer = 0;
         if (Health <= 0)
@@ -48,6 +49,17 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
         }
         else { valueToHeal = val; }
         Health += valueToHeal;
+    }
+    public void Invicibility(float time)
+    {
+        if(_isInvincible) { return; }
+        StartCoroutine(InvicibilityCoroutine(time));
+    }
+    IEnumerator InvicibilityCoroutine(float time)
+    {
+        _isInvincible = true;
+        yield return new WaitForSeconds(time);
+        _isInvincible = false;
     }
     IEnumerator Healing()
     {

@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public abstract class BaseWeapon : MonoBehaviour
+public abstract class Weapon : MonoBehaviour
 {
     protected float _lastTimeSinceFire;
     public bool IsReloading { get; protected set; } = false;
@@ -18,20 +18,22 @@ public abstract class BaseWeapon : MonoBehaviour
     [SerializeField] protected float _reloadTime;
     [SerializeField] protected float _damage;
     [SerializeField] protected float _ammoCost;
-    [Header("Mag and Loaded Ammo")]
-    [SerializeField] protected float _maxMagAmmo;
-    [SerializeField] protected float _currentMagAmmo;
+    [Header("Ammo")]
+    [SerializeField] protected float _maxReserveAmmo;
+    [SerializeField] protected float _currentReserveAmmo;
     [SerializeField] protected float _maxLoadedAmmo;
     [SerializeField] protected float _currentLoadedAmmo;
     public float CurrentLoadedAmmo => _currentLoadedAmmo;
     public float MaxLoadedAmmo => _maxLoadedAmmo;
-    public float CurrentMagAmmo => _currentMagAmmo;
-    public float MaxMagAmmo => _maxMagAmmo;
+    public float CurrentReserveAmmo => _currentReserveAmmo;
+    public float MaxReserveAmmo => _maxReserveAmmo;
     protected Animator _animator;
-    [Header("Firepoint and orientation")]
+    [Header("orientation")]
     [SerializeField] protected Transform _visualFirePoint;
     [SerializeField] protected FireMode _fireMode;
-    [SerializeField] public Weaponside Weaponside;
+    [SerializeField] protected bool _isDroppable;
+    public bool IsDroppable => _isDroppable;
+    public Weaponside WeaponsideOfWeapon;
     protected Transform _firePoint;
 
 
@@ -47,7 +49,7 @@ public abstract class BaseWeapon : MonoBehaviour
             _lastTimeSinceFire += Time.deltaTime;
         }
         if (IsReloading) { return; }
-        if (_currentLoadedAmmo == 0 && _currentMagAmmo > 0)
+        if (_currentLoadedAmmo == 0 && _currentReserveAmmo > 0)
         {
             StartCoroutine(Reload());
         }
@@ -55,9 +57,9 @@ public abstract class BaseWeapon : MonoBehaviour
     }
     protected void HandleGunControls()
     {
-        bool firing = (Weaponside == Weaponside.left) ? InputManager.Instance.FiringLeft : InputManager.Instance.FiringRight;
-        bool firePressed = (Weaponside == Weaponside.left) ? InputManager.Instance.FirePressedLeft : InputManager.Instance.FirePressedRight;
-        bool reloadPressed = (Weaponside == Weaponside.left) ? InputManager.Instance.ReloadLeft : InputManager.Instance.ReloadRight;
+        bool firing = (WeaponsideOfWeapon == Weaponside.left) ? InputManager.Instance.FiringLeft : InputManager.Instance.FiringRight;
+        bool firePressed = (WeaponsideOfWeapon == Weaponside.left) ? InputManager.Instance.FirePressedLeft : InputManager.Instance.FirePressedRight;
+        bool reloadPressed = (WeaponsideOfWeapon == Weaponside.left) ? InputManager.Instance.ReloadLeft : InputManager.Instance.ReloadRight;
         //Lord help me
         switch (_fireMode)
         {
@@ -82,8 +84,24 @@ public abstract class BaseWeapon : MonoBehaviour
         }
         if (reloadPressed) StartCoroutine(Reload());
     }
-
     abstract protected void Shoot();
+    public void PickupReload(float loadedAmmo, float reserveAmmo, WeaponPickup weaponPickup)
+    {
+        if (IsReloading) { return; }
+
+        loadedAmmo = Mathf.RoundToInt(loadedAmmo);
+        reserveAmmo = Mathf.RoundToInt(reserveAmmo);
+
+        float diffNeededForLoaded = _maxLoadedAmmo - _currentLoadedAmmo;
+        float loadedAmmoToUse = Mathf.Min(diffNeededForLoaded, loadedAmmo);
+        _currentLoadedAmmo += loadedAmmoToUse;
+
+        float diffNeededForReserve = _maxReserveAmmo - _currentReserveAmmo;
+        float reserveAmmoToUse = Mathf.Min(diffNeededForReserve, reserveAmmo);
+        _currentReserveAmmo += reserveAmmoToUse;
+
+        weaponPickup.AddAmmo(-loadedAmmoToUse,-reserveAmmoToUse);
+    }
     protected IEnumerator ShootBurst()
     {
         _isBursting = true;
@@ -96,7 +114,7 @@ public abstract class BaseWeapon : MonoBehaviour
     }
     protected virtual IEnumerator Reload()
     {
-        if (_currentLoadedAmmo == _maxLoadedAmmo  || _currentMagAmmo == 0)
+        if (_currentLoadedAmmo == _maxLoadedAmmo  || _currentReserveAmmo == 0)
         {
             yield break;
         }
@@ -107,21 +125,21 @@ public abstract class BaseWeapon : MonoBehaviour
         yield return new WaitForSeconds(_reloadTime);
 
         float ammoNeeded = _maxLoadedAmmo - _currentLoadedAmmo;
-        if (_currentMagAmmo >= ammoNeeded)
+        if (_currentReserveAmmo >= ammoNeeded)
         {
             _currentLoadedAmmo = _maxLoadedAmmo;
-            _currentMagAmmo -= ammoNeeded;
+            _currentReserveAmmo -= ammoNeeded;
         }
         else
         {
-            _currentLoadedAmmo += _currentMagAmmo;
-            _currentMagAmmo = 0;
+            _currentLoadedAmmo += _currentReserveAmmo;
+            _currentReserveAmmo = 0;
         }
         IsReloading = false;
     }
     public void SetAmmo(float currentLoadedAmmo, float currentMagAmmo)
     {
         _currentLoadedAmmo = currentLoadedAmmo;
-        _currentMagAmmo = currentMagAmmo;
+        _currentReserveAmmo = currentMagAmmo;
     }
 }

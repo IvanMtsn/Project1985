@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class HitscanWeapon : BaseWeapon
+public abstract class HitscanWeapon : Weapon
 {
     [SerializeField] protected float _maxShotDistance;
     [SerializeField] protected float _spreadAngle;

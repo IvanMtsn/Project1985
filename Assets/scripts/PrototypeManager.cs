@@ -9,7 +9,7 @@ public class PrototypeManager : MonoBehaviour
     //no i dont care
     void Start()
     {
-
+        //Application.targetFrameRate = 30;
     }
     void Update()
     {

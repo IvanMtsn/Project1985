@@ -5,26 +5,21 @@ using UnityEngine;
 public class SpecialBulletBehaviour : MonoBehaviour
 {
     int _bulletDamage = 10;
-    float _pushStrength = 40f;
     Rigidbody _rb;
     [SerializeField] LayerMask _projectileMask;
-    // Start is called before the first frame update
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
     }
     private void OnTriggerEnter(Collider other)
     {
-        if ((other.gameObject.layer == 7 || other.gameObject.layer == 8))
+        if (CollisionUtils.IsLayerInMask(other.gameObject.layer, _projectileMask))
         {
             if (other.CompareTag("Enemy"))
             {
-                IDamageableEntity entity = other.gameObject.GetComponent<IDamageableEntity>();
-
-                Rigidbody rb = other.gameObject.GetComponent<Rigidbody>();
-                rb.AddForce(_rb.linearVelocity.normalized * _pushStrength, ForceMode.Impulse);
-
-                entity.TakeDamage(_bulletDamage);
+                IDamageableEntity enemy = other.gameObject.GetComponent<IDamageableEntity>();
+                other.gameObject.GetComponent<Enemy>().HeavyHit(_rb.linearVelocity.normalized);
+                enemy.TakeDamage(_bulletDamage);
             }
             EndBulletLife();
         }

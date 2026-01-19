@@ -199,6 +199,24 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropWeaponLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""7d5ee1b2-4463-4757-be0b-41fb6fe5787e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DropWeaponRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""f8c66a6f-7c78-4a3a-a07a-6ab8de0b79f2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -465,6 +483,28 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchWeaponRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d815870f-719d-4c32-8654-973ffcdd8506"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropWeaponLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5762f482-28b1-4108-921f-c47333e05927"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DropWeaponRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -546,6 +586,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_FirePressedRight = m_Player.FindAction("FirePressedRight", throwIfNotFound: true);
         m_Player_SwitchWeaponLeft = m_Player.FindAction("SwitchWeaponLeft", throwIfNotFound: true);
         m_Player_SwitchWeaponRight = m_Player.FindAction("SwitchWeaponRight", throwIfNotFound: true);
+        m_Player_DropWeaponLeft = m_Player.FindAction("DropWeaponLeft", throwIfNotFound: true);
+        m_Player_DropWeaponRight = m_Player.FindAction("DropWeaponRight", throwIfNotFound: true);
     }
 
     ~@Controls()
@@ -638,6 +680,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_FirePressedRight;
     private readonly InputAction m_Player_SwitchWeaponLeft;
     private readonly InputAction m_Player_SwitchWeaponRight;
+    private readonly InputAction m_Player_DropWeaponLeft;
+    private readonly InputAction m_Player_DropWeaponRight;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -697,6 +741,14 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/SwitchWeaponRight".
         /// </summary>
         public InputAction @SwitchWeaponRight => m_Wrapper.m_Player_SwitchWeaponRight;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/DropWeaponLeft".
+        /// </summary>
+        public InputAction @DropWeaponLeft => m_Wrapper.m_Player_DropWeaponLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/DropWeaponRight".
+        /// </summary>
+        public InputAction @DropWeaponRight => m_Wrapper.m_Player_DropWeaponRight;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -759,6 +811,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @SwitchWeaponRight.started += instance.OnSwitchWeaponRight;
             @SwitchWeaponRight.performed += instance.OnSwitchWeaponRight;
             @SwitchWeaponRight.canceled += instance.OnSwitchWeaponRight;
+            @DropWeaponLeft.started += instance.OnDropWeaponLeft;
+            @DropWeaponLeft.performed += instance.OnDropWeaponLeft;
+            @DropWeaponLeft.canceled += instance.OnDropWeaponLeft;
+            @DropWeaponRight.started += instance.OnDropWeaponRight;
+            @DropWeaponRight.performed += instance.OnDropWeaponRight;
+            @DropWeaponRight.canceled += instance.OnDropWeaponRight;
         }
 
         /// <summary>
@@ -806,6 +864,12 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @SwitchWeaponRight.started -= instance.OnSwitchWeaponRight;
             @SwitchWeaponRight.performed -= instance.OnSwitchWeaponRight;
             @SwitchWeaponRight.canceled -= instance.OnSwitchWeaponRight;
+            @DropWeaponLeft.started -= instance.OnDropWeaponLeft;
+            @DropWeaponLeft.performed -= instance.OnDropWeaponLeft;
+            @DropWeaponLeft.canceled -= instance.OnDropWeaponLeft;
+            @DropWeaponRight.started -= instance.OnDropWeaponRight;
+            @DropWeaponRight.performed -= instance.OnDropWeaponRight;
+            @DropWeaponRight.canceled -= instance.OnDropWeaponRight;
         }
 
         /// <summary>
@@ -995,5 +1059,19 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSwitchWeaponRight(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DropWeaponLeft" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDropWeaponLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "DropWeaponRight" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnDropWeaponRight(InputAction.CallbackContext context);
     }
 }

@@ -113,6 +113,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DropWeaponLeft",
+                    "type": "Button",
+                    "id": "7d5ee1b2-4463-4757-be0b-41fb6fe5787e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DropWeaponRight",
+                    "type": "Button",
+                    "id": "f8c66a6f-7c78-4a3a-a07a-6ab8de0b79f2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -377,6 +395,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "SwitchWeaponRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d815870f-719d-4c32-8654-973ffcdd8506",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DropWeaponLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5762f482-28b1-4108-921f-c47333e05927",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DropWeaponRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -12,10 +12,12 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] TMP_Text _rightWeaponCurrentAmmo;
     [SerializeField] TMP_Text _leftWeaponIsReloading;
     [SerializeField] TMP_Text _rightWeaponIsReloading;
-    [SerializeField] TMP_Text _leftWeaponMagAmmo;
-    [SerializeField] TMP_Text _rightWeaponMagAmmo;
+    [SerializeField] TMP_Text _leftWeaponReserveAmmo;
+    [SerializeField] TMP_Text _rightWeaponReserveAmmo;
     [SerializeField] Image _dashIndicator;
     [SerializeField] Image _healthIndicator;
+    [SerializeField] GameObject SwitchPromptL;
+    [SerializeField] GameObject SwitchPromptR;
     PlayerStats _playerStats;
     PlayerMovement _playerMovement;
     WeaponHandler _weaponHandler;
@@ -25,12 +27,14 @@ public class PlayerUI : MonoBehaviour
         _playerMovement = GetComponent<PlayerMovement>();
         _weaponHandler = GetComponent<WeaponHandler>();
         _healthIndicator.fillAmount = _playerStats.Health * 0.01f;
+        _weaponHandler.OnWeaponHoverEnter += DisplayWeaponSwitchPrompt;
+        _weaponHandler.OnWeaponHoverExit += HideWeaponSwitchPrompt;
     }
     void Update()
     {
         DisplayStats();
-        DisplayAmmo(_weaponHandler.LeftWeapon.GetComponent<BaseWeapon>(), _leftWeaponCurrentAmmo, _leftWeaponIsReloading, _leftWeaponMagAmmo);
-        DisplayAmmo(_weaponHandler.RightWeapon.GetComponent<BaseWeapon>(), _rightWeaponCurrentAmmo, _rightWeaponIsReloading, _rightWeaponMagAmmo);
+        DisplayAmmo(_weaponHandler.LeftWeapon.GetComponent<Weapon>(), _leftWeaponCurrentAmmo, _leftWeaponIsReloading, _leftWeaponReserveAmmo);
+        DisplayAmmo(_weaponHandler.RightWeapon.GetComponent<Weapon>(), _rightWeaponCurrentAmmo, _rightWeaponIsReloading, _rightWeaponReserveAmmo);
     }
     void DisplayStats()
     {
@@ -38,22 +42,43 @@ public class PlayerUI : MonoBehaviour
         _healthIndicator.fillAmount = Mathf.Clamp(_playerStats.Health * 0.01f, 0, 1);
         _dashIndicator.fillAmount = Mathf.MoveTowards(_dashIndicator.fillAmount, (_playerMovement.LastTimeSinceDash / _playerMovement.DashCooldown), 6f * Time.deltaTime);
     }
-    void DisplayAmmo(BaseWeapon weapon, TMP_Text loadedAmmoText, TMP_Text isReloadingText, TMP_Text magAmmoText)
+    void DisplayAmmo(Weapon weapon, TMP_Text loadedAmmoText, TMP_Text isReloadingText, TMP_Text reserveAmmoText)
     {
         if (weapon != null)
         {
             loadedAmmoText.text = $"{weapon.CurrentLoadedAmmo}/{weapon.MaxLoadedAmmo}";
             isReloadingText.gameObject.SetActive(weapon.IsReloading);
-            magAmmoText.text = weapon.CurrentMagAmmo.ToString();
+            reserveAmmoText.text = weapon.CurrentReserveAmmo.ToString();
         }
         else
         {
             loadedAmmoText.text = "--/--";
-            magAmmoText.text = "---";
+            reserveAmmoText.text = "---";
         }
     }
-    void DisplayWeaponSwitchPrompt(bool leftWeapon, bool rightWeapon)
+    void DisplayWeaponSwitchPrompt(WeaponPickup weaponPickup, bool leftWeapon, bool rightWeapon)
     {
-
+        if(leftWeapon)
+        {
+            SwitchPromptL.SetActive(true);
+            SwitchPromptL.GetComponentInChildren<TMP_Text>().text = $"{InputManager.Instance.GetBind("SwitchWeaponLeft")} to switch weapon to:";
+            SwitchPromptL.GetComponentInChildren<Image>().sprite = weaponPickup.WeaponIcon;
+        }
+        if (rightWeapon)
+        {
+            SwitchPromptR.SetActive(true);
+            SwitchPromptR.GetComponentInChildren<TMP_Text>().text = $"{InputManager.Instance.GetBind("SwitchWeaponRight")} to switch weapon to:";
+            SwitchPromptR.GetComponentInChildren<Image>().sprite = weaponPickup.WeaponIcon;
+        }
+    }
+    void HideWeaponSwitchPrompt()
+    {
+        SwitchPromptL.SetActive(false);
+        SwitchPromptR.SetActive(false);
+    }
+    private void OnDisable()
+    {
+        _weaponHandler.OnWeaponHoverEnter -= DisplayWeaponSwitchPrompt;
+        _weaponHandler.OnWeaponHoverExit -= HideWeaponSwitchPrompt;
     }
 }

@@ -6,17 +6,23 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
+    /* Dear Reader or Readess (?),
+     * What you are about to uncover here is a phenomenon that cannot be described with words.
+     * the only reason any of this works is because things that dont work cancel eachother out,
+     * therefore creating a state of "it somehow works wtf"
+     * I am therefore sorry for anyone who has to peek into this hellhole
+     * do I know what the underlying problems are? yes
+     * Will I fix them? uhh
+     * */
     public int MoveSpeed = 12;
-    int _propulsionForce = 15;
+    int _propulsionForce = 25;
     float _rotation = 0;
     float _rotationX = 0;
     float _mouseSensitivityHorizontal = 0.1f;
     float _mouseSensitivityVertical = 0.1f;
-    float _controllerSensitivityHorizontal = 1f;
-    float _controllerSensitivityVertical = 0.6f;
-    float _dashDuraton = 0.35f;
-    float _dashInvincibilityDuration = 0.2f;
-    public float DashCooldown { get; private set; } = 2f;
+    float _dashDuraton = 0.5f;
+    float _dashInvincibilityDuration = 0.35f;
+    public float DashCooldown { get; private set; } = 3.33f;
     float _AngleUntilSlope = 0.01f;
     public float LastTimeSinceDash { get; private set; }
     public Camera PlayerCam;
@@ -25,10 +31,11 @@ public class PlayerMovement : MonoBehaviour
     Vector3 _moveRelative;
     Vector2 _movementInput;
     Vector2 _lookInput;
+    Coroutine _dashCoroutine;
     bool _isGrounded = true;
     public bool CanDash { get; private set; } = true;
     public bool IsDashing { get; private set; } = false;
-    public bool IsInvincible { get;private set; } = false;
+    public bool IsGrounded => _isGrounded;
     public System.Action OnDashEnd;
     [SerializeField]LayerMask _groundLayer; 
     void Start()
@@ -47,11 +54,11 @@ public class PlayerMovement : MonoBehaviour
                 CanDash = true;
             }
         }
-        if (InputManager.Instance.Dash && CanDash && _rb.linearVelocity != Vector3.zero && _isGrounded)
+        if (InputManager.Instance.Dash && CanDash && _rb.linearVelocity != Vector3.zero)
         {
-            _rb.linearVelocity = new Vector3(0, _rb.linearVelocity.y, 0);
+            _rb.linearVelocity = new Vector3(0, 0, 0);
             Vector3 dashDir = new Vector3(_movementInput.x, 0, _movementInput.y);
-            StartCoroutine(Dash(dashDir));
+            _dashCoroutine = StartCoroutine(Dash(dashDir));
         }
         Movement();
     }
@@ -70,25 +77,10 @@ public class PlayerMovement : MonoBehaviour
             _moveDirection = _moveDirection.normalized;
         }
 
-        var device = InputManager.Instance.InputActions.Player.Look.activeControl?.device;
-        float sensitivityHorizontal;
-        float sensitivityVertical;
-        switch (device)
-        {
-            case Mouse: sensitivityHorizontal = _mouseSensitivityHorizontal;
-                sensitivityVertical = _mouseSensitivityVertical;
-                break;
-            case Gamepad: sensitivityHorizontal = _controllerSensitivityHorizontal;
-                sensitivityVertical = _controllerSensitivityVertical;
-                break;
-            default: sensitivityHorizontal = _mouseSensitivityHorizontal;
-                sensitivityVertical = _mouseSensitivityVertical;
-                break;
-        }
         if(_lookInput.magnitude < 0.1) { _lookInput = Vector2.zero; }
 
-        _rotation += -_lookInput.y * sensitivityVertical;
-        _rotationX += _lookInput.x * sensitivityHorizontal;
+        _rotation += -_lookInput.y * _mouseSensitivityVertical;
+        _rotationX += _lookInput.x * _mouseSensitivityHorizontal;
         _rotation = Mathf.Clamp(_rotation, -89, 89);
 
         _moveRelative = transform.TransformDirection(_moveDirection);
@@ -111,21 +103,25 @@ public class PlayerMovement : MonoBehaviour
     {
         CanDash = false;
         IsDashing = true;
-        IsInvincible = true;
+        GetComponent<PlayerStats>().Invicibility(_dashInvincibilityDuration);
         LastTimeSinceDash = 0;
         Vector3 dashVelocity = transform.TransformDirection(direction.normalized) * _propulsionForce;
         float timer = 0;
         while(timer < _dashDuraton)
         {
-            if(timer >= _dashInvincibilityDuration)
-            {
-                IsInvincible = false;
-            }
-            _rb.linearVelocity += dashVelocity;
+            _rb.linearVelocity = dashVelocity;
             timer += Time.deltaTime;
             yield return null;
         }
         IsDashing = false;
+        OnDashEnd?.Invoke();
+    }
+    public void EndDash()
+    {
+        StopCoroutine(_dashCoroutine);
+        _dashCoroutine = null;
+        IsDashing = false;
+        _rb.linearVelocity = Vector3.zero;
         OnDashEnd?.Invoke();
     }
     bool IsOnSlope(out Vector3 slopeDirection)
