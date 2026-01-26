@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerGroundCheck : MonoBehaviour
 {
-    Transform _groundChecker;
+    [SerializeField]Transform _groundChecker;
     bool _isGrounded;
     public bool IsGrounded => _isGrounded;
     [SerializeField] LayerMask _groundLayer;
@@ -12,6 +12,6 @@ public class PlayerGroundCheck : MonoBehaviour
     }
     void FixedUpdate()
     {
-        _isGrounded = Physics.CheckSphere(transform.position, 0.45f, _groundLayer);
+        _isGrounded = Physics.CheckSphere(_groundChecker.position, 0.45f, _groundLayer);
     }
 }

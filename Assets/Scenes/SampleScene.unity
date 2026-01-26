@@ -5262,7 +5262,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 70
+  field of view: 90
   orthographic: 0
   orthographic size: 10
   m_Depth: -1
@@ -7232,7 +7232,7 @@ PrefabInstance:
     - target: {fileID: 1240133376212863410, guid: 344fca4c060dc784e92c22dbcbf8db6c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1954611782608739050, guid: 344fca4c060dc784e92c22dbcbf8db6c,
         type: 3}
@@ -7320,7 +7320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1288143489}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9000,8 +9000,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 207158324}
-  - {fileID: 1288143490}
   - {fileID: 728908398}
+  - {fileID: 1288143490}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1847066906
@@ -9130,7 +9130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172a0c60e1c80e94f873821f7a1aca7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerCam: {fileID: 963194225}
 --- !u!114 &1847066913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9143,6 +9142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22b3cd5178c07646ace221cd6dee4a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _groundChecker: {fileID: 728908398}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 384
@@ -10095,7 +10095,7 @@ PrefabInstance:
     - target: {fileID: 1240133376212863410, guid: 344fca4c060dc784e92c22dbcbf8db6c,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1954611782608739050, guid: 344fca4c060dc784e92c22dbcbf8db6c,
         type: 3}

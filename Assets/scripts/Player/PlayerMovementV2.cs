@@ -7,9 +7,9 @@ public class PlayerMovementV2 : MonoBehaviour
     Vector3 _moveDir;
     Vector3 _moveRelative;
     Rigidbody _rb;
-    [SerializeField] GameObject _playerCam;
     float _moveSpeed = 13f;
     PlayerGroundCheck _gc;
+    Vector3 _velocityChange;
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -28,11 +28,18 @@ public class PlayerMovementV2 : MonoBehaviour
     void FixedUpdate()
     {
         _moveRelative = transform.TransformDirection(_moveDir);
+        Vector3 targetVelocity = _moveRelative * _moveSpeed;
         if (_gc.IsGrounded)
         {
-            Vector3 targetVelocity = _moveRelative * _moveSpeed;
-            Vector3 velocityChange = targetVelocity - new Vector3(_rb.linearVelocity.x,0,_rb.linearVelocity.z);
-            _rb.AddForce(velocityChange, ForceMode.VelocityChange);
+            _velocityChange = targetVelocity - new Vector3(_rb.linearVelocity.x,0,_rb.linearVelocity.z);
+            _rb.AddForce(_velocityChange, ForceMode.VelocityChange);
+
+        }
+        else
+        {
+            Vector3 currentVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
+            Vector3 airForce = (targetVelocity - currentVelocity) * 0.15f; // 30% strength
+            _rb.AddForce(airForce, ForceMode.VelocityChange);
         }
     }
 }
