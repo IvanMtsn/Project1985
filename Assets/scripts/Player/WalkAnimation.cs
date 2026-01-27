@@ -4,14 +4,18 @@ using UnityEngine;
 public class WalkBobLookSway : MonoBehaviour
 {
     Animator _animator;
-    PlayerMovement _player;
+    PlayerGroundCheck _gc;
+    PlayerMovementV2 _pMov;
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _player = FindAnyObjectByType<PlayerMovement>();
+        _gc = GetComponentInParent<PlayerGroundCheck>();
+        _pMov = GetComponentInParent<PlayerMovementV2>();
+        _pMov = GetComponentInParent<PlayerMovementV2>();
     }
     void Update()
     {
-        _animator.SetBool("moving", InputManager.Instance.Move.magnitude > Mathf.Epsilon && _player.IsGrounded && !_player.IsDashing);
+        //Add isDashing check later!!!
+        _animator.SetBool("moving", InputManager.Instance.Move.magnitude > Mathf.Epsilon && _gc.IsGrounded);
     }
 }

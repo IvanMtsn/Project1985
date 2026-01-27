@@ -14,7 +14,6 @@ public class PlayerMovementV2 : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _gc = GetComponent<PlayerGroundCheck>();
-
     }
     void Update()
     {
@@ -29,17 +28,18 @@ public class PlayerMovementV2 : MonoBehaviour
     {
         _moveRelative = transform.TransformDirection(_moveDir);
         Vector3 targetVelocity = _moveRelative * _moveSpeed;
+        Vector3 horizontalRbVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
         if (_gc.IsGrounded)
         {
-            _velocityChange = targetVelocity - new Vector3(_rb.linearVelocity.x,0,_rb.linearVelocity.z);
+            _velocityChange = targetVelocity - horizontalRbVelocity;
             _rb.AddForce(_velocityChange, ForceMode.VelocityChange);
-
         }
         else
         {
-            Vector3 currentVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
-            Vector3 airForce = (targetVelocity - currentVelocity) * 0.15f; // 30% strength
-            _rb.AddForce(airForce, ForceMode.VelocityChange);
+            Vector3 airVelocity = (targetVelocity - horizontalRbVelocity) * 0.15f;
+            Vector3 airVelocityDragThing = Vector3.ClampMagnitude(airVelocity, 0.5f);
+            _rb.AddForce(airVelocityDragThing, ForceMode.VelocityChange);
+            _rb.AddForce(Physics.gravity, ForceMode.Acceleration);
         }
     }
 }

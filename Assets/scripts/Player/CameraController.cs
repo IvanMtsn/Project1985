@@ -5,8 +5,7 @@ public class CameraController : MonoBehaviour
     Vector2 _lookInput;
     float _rotationY = 0;
     float _rotationX = 0;
-    float _mouseSensitivityHorizontal = 0.1f;
-    float _mouseSensitivityVertical = 0.1f;
+    float _mouseSensitivity = 0.25f;
     [SerializeField] Transform _camPos;
     [SerializeField] Transform _player;
     void Start()
@@ -18,10 +17,9 @@ public class CameraController : MonoBehaviour
     {
         _lookInput = InputManager.Instance.Look;
 
-        _rotationY += -_lookInput.y * _mouseSensitivityVertical;
-        _rotationX += _lookInput.x * _mouseSensitivityHorizontal;
+        _rotationY += -_lookInput.y * _mouseSensitivity;
+        _rotationX += _lookInput.x * _mouseSensitivity;
         _rotationY = Mathf.Clamp(_rotationY, -89, 89);
-
     }
     private void LateUpdate()
     {
