@@ -7,7 +7,7 @@ public class PlayerMovementV2 : MonoBehaviour
     Vector2 _movementInput;
     Vector3 _moveDir;
     Vector3 _moveRelative;
-    Rigidbody _rb;
+    public Rigidbody Rb;
     float _moveSpeed = 13f;
     public PlayerGroundCheck Gc;
     Vector3 _velocityChange;
@@ -24,7 +24,7 @@ public class PlayerMovementV2 : MonoBehaviour
     public float LastTimeSinceDash => _lastTimeSinceDash;
     void Start()
     {
-        _rb = GetComponent<Rigidbody>();
+        Rb = GetComponent<Rigidbody>();
         Gc = GetComponentInChildren<PlayerGroundCheck>();
         _lastTimeSinceDash = _dashCooldown;
     }
@@ -49,9 +49,9 @@ public class PlayerMovementV2 : MonoBehaviour
                 _canDash = true;
             }
         }
-        if (InputManager.Instance.Dash && _canDash && _rb.linearVelocity != Vector3.zero)
+        if (InputManager.Instance.Dash && _canDash && Rb.linearVelocity != Vector3.zero)
         {
-            _rb.linearVelocity = new Vector3(0, 0, 0);
+            Rb.linearVelocity = new Vector3(0, 0, 0);
             Vector3 dashDir = new Vector3(_movementInput.x, 0, _movementInput.y);
             StartCoroutine(Dash(dashDir));
         }
@@ -64,18 +64,18 @@ public class PlayerMovementV2 : MonoBehaviour
         }
         _moveRelative = transform.TransformDirection(_moveDir);
         Vector3 targetVelocity = _moveRelative * _moveSpeed;
-        Vector3 horizontalRbVelocity = new Vector3(_rb.linearVelocity.x, 0, _rb.linearVelocity.z);
+        Vector3 horizontalRbVelocity = new Vector3(Rb.linearVelocity.x, 0, Rb.linearVelocity.z);
         if (Gc.IsGrounded)
         {
             _velocityChange = targetVelocity - horizontalRbVelocity;
-            _rb.AddForce(_velocityChange, ForceMode.VelocityChange);
+            Rb.AddForce(_velocityChange, ForceMode.VelocityChange);
         }
         else
         {
             Vector3 airVelocity = (targetVelocity - horizontalRbVelocity) * 0.15f;
             Vector3 airVelocityDragThing = Vector3.ClampMagnitude(airVelocity, 0.5f);
-            _rb.AddForce(airVelocityDragThing, ForceMode.VelocityChange);
-            _rb.AddForce(Physics.gravity, ForceMode.Acceleration);
+            Rb.AddForce(airVelocityDragThing, ForceMode.VelocityChange);
+            Rb.AddForce(Physics.gravity, ForceMode.Acceleration);
         }
     }
     IEnumerator Dash(Vector3 direction)
@@ -88,7 +88,7 @@ public class PlayerMovementV2 : MonoBehaviour
         float timer = 0;
         while (timer < _dashDuraton)
         {
-            _rb.linearVelocity = dashVelocity;
+            Rb.linearVelocity = dashVelocity;
             timer += Time.deltaTime;
             yield return null;
         }

@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class PlayerGroundCheck : MonoBehaviour
 {
-    [SerializeField]Transform _groundChecker;
     bool _isGrounded;
     public bool IsGrounded => _isGrounded;
     [SerializeField] LayerMask _groundLayer;
     List<Collider> _colliders = new List<Collider>();
+    PlayerMovementV2 _pMov;
     void Start()
     {
-        
+        _pMov = GetComponentInParent<PlayerMovementV2>();
     }
     void FixedUpdate()
     {
+        if(_isGrounded)
+        {
+            SnapToGround();
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -30,6 +34,13 @@ public class PlayerGroundCheck : MonoBehaviour
         {
             _colliders.Remove(other);
             _isGrounded = _colliders.Count > 0;
+        }
+    }
+    void SnapToGround()
+    {
+        if(Physics.Raycast(transform.position, Vector3.down,out RaycastHit hit,0.3f))
+        {
+            _pMov.Rb.position = hit.point + new Vector3(0,1,0);
         }
     }
 }
