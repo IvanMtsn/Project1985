@@ -6,14 +6,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    /* Dear Reader or Readess (?),
-     * What you are about to uncover here is a phenomenon that cannot be described with words.
-     * the only reason any of this works is because things that dont work cancel eachother out,
-     * therefore creating a state of "it somehow works wtf"
-     * I am therefore sorry for anyone who has to peek into this hellhole
-     * do I know what the underlying problems are? yes
-     * Will I fix them? uhh
-     * */
     public int MoveSpeed = 12;
     int _propulsionForce = 25;
     float _rotation = 0;

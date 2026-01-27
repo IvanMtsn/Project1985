@@ -19,12 +19,12 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] GameObject SwitchPromptL;
     [SerializeField] GameObject SwitchPromptR;
     PlayerStats _playerStats;
-    PlayerMovement _playerMovement;
+    PlayerMovementV2 _pMov;
     WeaponHandler _weaponHandler;
     void Start()
     {
         _playerStats = GetComponent<PlayerStats>();
-        _playerMovement = GetComponent<PlayerMovement>();
+        _pMov = GetComponent<PlayerMovementV2>();
         _weaponHandler = GetComponent<WeaponHandler>();
         _healthIndicator.fillAmount = _playerStats.Health * 0.01f;
         _weaponHandler.OnWeaponHoverEnter += DisplayWeaponSwitchPrompt;
@@ -40,7 +40,7 @@ public class PlayerUI : MonoBehaviour
     {
         _healthText.text = _playerStats.Health.ToString();
         _healthIndicator.fillAmount = Mathf.Clamp(_playerStats.Health * 0.01f, 0, 1);
-        _dashIndicator.fillAmount = Mathf.MoveTowards(_dashIndicator.fillAmount, (_playerMovement.LastTimeSinceDash / _playerMovement.DashCooldown), 6f * Time.deltaTime);
+        _dashIndicator.fillAmount = Mathf.MoveTowards(_dashIndicator.fillAmount, (_pMov.LastTimeSinceDash / _pMov.DashCooldown), 6f * Time.deltaTime);
     }
     void DisplayAmmo(Weapon weapon, TMP_Text loadedAmmoText, TMP_Text isReloadingText, TMP_Text reserveAmmoText)
     {
