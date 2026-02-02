@@ -13,9 +13,13 @@ public class PrototypeManager : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.L))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementV2>().EndDash();
         }
     }
 }

@@ -15,10 +15,7 @@ public class PlayerGroundCheck : MonoBehaviour
     }
     void FixedUpdate()
     {
-        if(_isGrounded)
-        {
-            SnapToGround();
-        }
+
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -26,6 +23,7 @@ public class PlayerGroundCheck : MonoBehaviour
         {
             _colliders.Add(other);
             _isGrounded = true;
+            SnapToGround();
         }
     }
     private void OnTriggerExit(Collider other)

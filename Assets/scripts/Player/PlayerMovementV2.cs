@@ -17,6 +17,7 @@ public class PlayerMovementV2 : MonoBehaviour
     public bool IsDashing => _isDashing;
     float _dashDuraton = 0.5f;
     float _lastTimeSinceDash = 0;
+    float _currentDashTime = 0;
     float _dashForce = 25f;
     float _dashInvincibilityDuration = 0.25f;
     float _dashCooldown = 3.33f;
@@ -85,14 +86,18 @@ public class PlayerMovementV2 : MonoBehaviour
         GetComponent<PlayerStats>().Invicibility(_dashInvincibilityDuration);
         _lastTimeSinceDash = 0;
         Vector3 dashVelocity = transform.TransformDirection(direction.normalized) * _dashForce;
-        float timer = 0;
-        while (timer < _dashDuraton)
+        _currentDashTime = 0;
+        while (_currentDashTime < _dashDuraton)
         {
             Rb.linearVelocity = dashVelocity;
-            timer += Time.deltaTime;
+            _currentDashTime += Time.deltaTime;
             yield return null;
         }
         _isDashing = false;
-        //OnDashEnd?.Invoke();
+    }
+    public void EndDash()
+    {
+        StopCoroutine(Dash(Vector3.zero));
+        _isDashing = false;
     }
 }

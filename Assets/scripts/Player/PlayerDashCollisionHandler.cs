@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class PlayerDashCollisionHandler : MonoBehaviour
 {
-    PlayerMovement _player;
+    PlayerMovementV2 _player;
     [SerializeField] LayerMask _pushableObjectsMask;
     List<GameObject> _contactedObjects;
     void Start()
     {
-        _player = GetComponent<PlayerMovement>();
+        _player = GetComponent<PlayerMovementV2>();
         _contactedObjects = new List<GameObject>();
-        _player.OnDashEnd += ClearContactedObjects;
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -27,8 +26,4 @@ public class PlayerDashCollisionHandler : MonoBehaviour
         }
     }
     void ClearContactedObjects() => _contactedObjects.Clear();
-    private void OnDisable()
-    {
-        _player.OnDashEnd -= ClearContactedObjects;
-    }
 }
