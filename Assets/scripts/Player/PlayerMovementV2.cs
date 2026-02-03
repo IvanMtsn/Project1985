@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -7,9 +8,10 @@ public class PlayerMovementV2 : MonoBehaviour
     Vector2 _movementInput;
     Vector3 _moveDir;
     Vector3 _moveRelative;
-    public Rigidbody Rb;
+    [HideInInspector] public Rigidbody Rb;
     float _moveSpeed = 13f;
-    public PlayerGroundCheck Gc;
+    public PlayerGroundCheck GroundCheck;
+    public PlayerGroundCheck SlopeCheck;
     Vector3 _velocityChange;
     bool _canDash = true;
     bool _isDashing = false;
@@ -26,7 +28,6 @@ public class PlayerMovementV2 : MonoBehaviour
     void Start()
     {
         Rb = GetComponent<Rigidbody>();
-        Gc = GetComponentInChildren<PlayerGroundCheck>();
         _lastTimeSinceDash = _dashCooldown;
     }
     void Update()
@@ -34,13 +35,24 @@ public class PlayerMovementV2 : MonoBehaviour
         /* What its supposed to do:
          * Input reading for movement
          * into making sure diagonal movement isnt faster
+         * into slopeMovement checking
          * into dash cooldown and input reading and dash triggering
          */
+
         _movementInput = InputManager.Instance.Move;
         _moveDir = new Vector3(_movementInput.x, 0, _movementInput.y);
         if (_moveDir.magnitude > 1)
         {
             _moveDir = _moveDir.normalized;
+        }
+        if (SlopeCheck.IsGrounded && _moveDir.magnitude == 0)
+        {
+            Rb.linearVelocity = Vector3.zero;
+            Rb.useGravity = false;
+        }
+        else
+        {
+            Rb.useGravity = true;
         }
         if (!_canDash && _lastTimeSinceDash < _dashCooldown)
         {
@@ -64,10 +76,16 @@ public class PlayerMovementV2 : MonoBehaviour
             return;
         }
         _moveRelative = transform.TransformDirection(_moveDir);
+        //Debug.Log(_moveDir.magnitude);
+        _moveRelative = AlignToSurface(_moveRelative);
         Vector3 targetVelocity = _moveRelative * _moveSpeed;
         Vector3 horizontalRbVelocity = new Vector3(Rb.linearVelocity.x, 0, Rb.linearVelocity.z);
-        if (Gc.IsGrounded)
+        if (GroundCheck.IsGrounded)
         {
+            if (SlopeCheck.IsGrounded && Rb.linearVelocity.y > 0)
+            {
+                Rb.linearVelocity = horizontalRbVelocity;
+        }
             _velocityChange = targetVelocity - horizontalRbVelocity;
             Rb.AddForce(_velocityChange, ForceMode.VelocityChange);
         }
@@ -76,7 +94,7 @@ public class PlayerMovementV2 : MonoBehaviour
             Vector3 airVelocity = (targetVelocity - horizontalRbVelocity) * 0.15f;
             Vector3 airVelocityDragThing = Vector3.ClampMagnitude(airVelocity, 0.5f);
             Rb.AddForce(airVelocityDragThing, ForceMode.VelocityChange);
-            Rb.AddForce(Physics.gravity, ForceMode.Acceleration);
+            Rb.AddForce(Physics.gravity * 3f, ForceMode.Acceleration);
         }
     }
     IEnumerator Dash(Vector3 direction)
@@ -99,5 +117,15 @@ public class PlayerMovementV2 : MonoBehaviour
     {
         StopCoroutine(Dash(Vector3.zero));
         _isDashing = false;
+
+    }
+    public Vector3 AlignToSurface(Vector3 movementDir)
+    {
+        if (SlopeCheck.IsGrounded && Physics.Raycast(GroundCheck.transform.position, -transform.up, out RaycastHit hit, 0.25f, GroundCheck.GroundLayer))
+        {
+            Vector3 slopeDir = Vector3.ProjectOnPlane(movementDir, hit.normal).normalized;
+            return slopeDir * movementDir.magnitude;
+        }
+        return movementDir;
     }
 }

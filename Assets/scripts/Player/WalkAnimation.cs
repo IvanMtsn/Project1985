@@ -13,6 +13,6 @@ public class WalkBobLookSway : MonoBehaviour
     void Update()
     {
         //Add isDashing check later!!!
-        _animator.SetBool("moving", InputManager.Instance.Move.magnitude > Mathf.Epsilon && _pMov.Gc.IsGrounded && !_pMov.IsDashing);
+        _animator.SetBool("moving", InputManager.Instance.Move.magnitude > Mathf.Epsilon && _pMov.GroundCheck.IsGrounded && !_pMov.IsDashing);
     }
 }
