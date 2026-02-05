@@ -36,7 +36,6 @@ public abstract class Weapon : MonoBehaviour
     public Weaponside WeaponsideOfWeapon;
     protected Transform _firePoint;
 
-
     protected virtual void Start()
     {
         _firePoint = GameObject.Find("ActualFirePoint").transform;

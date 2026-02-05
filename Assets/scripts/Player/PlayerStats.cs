@@ -13,6 +13,8 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
     bool _isHealing = false;
     bool _isInvincible = false;
     float _hitInvincibleTimer = 0.3f; 
+    [SerializeField] CameraController _cameraController;
+    Coroutine _healingCoroutine;
     void Start()
     {
         Health = MaxHealth;
@@ -24,16 +26,22 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
             _currentHealTimer += Time.deltaTime;
             if(_currentHealTimer >= _timerUntilHeal)
             {
-                StartCoroutine(Healing());
+                _healingCoroutine = StartCoroutine(Healing());
+                _currentHealTimer = 0;
             }
         }
     }
     public void TakeDamage(float damage)
     {
         if (_isInvincible) { return; }
+        if (_isHealing)
+        {
+            StopCoroutine(_healingCoroutine);
+            _isHealing = false;
+        }
         Invicibility(_hitInvincibleTimer);
-        EffectsManager.Instance.ShakeCamera(damage);
-        Health -=damage;
+        _cameraController.ShakeCamera(damage/3);
+        Health -= damage;
         _currentHealTimer = 0;
         if (Health <= 0)
         {
