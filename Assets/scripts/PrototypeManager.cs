@@ -19,7 +19,7 @@ public class PrototypeManager : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.K))
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementV2>().EndDash();
+            UnityEngine.GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMovementV2>().EndDash();
         }
     }
 }

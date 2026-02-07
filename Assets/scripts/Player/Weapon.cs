@@ -9,8 +9,8 @@ public abstract class Weapon : MonoBehaviour
     public bool IsReloading { get; protected set; } = false;
     protected bool _isBursting = false;
     protected bool _shotQueued = false;
-    [SerializeField] GameObject _weaponPickupPrefab;
-    public GameObject WeaponPickupPrefab => _weaponPickupPrefab;
+    [SerializeField] UnityEngine.GameObject _weaponPickupPrefab;
+    public UnityEngine.GameObject WeaponPickupPrefab => _weaponPickupPrefab;
     [Header("Reload Time and Shooting values")]
     [SerializeField] protected float _firingCooldown;
     [SerializeField] protected float _burstCooldown;
@@ -38,7 +38,7 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void Start()
     {
-        _firePoint = GameObject.Find("ActualFirePoint").transform;
+        _firePoint = UnityEngine.GameObject.Find("ActualFirePoint").transform;
         _animator = GetComponent<Animator>();
     }
     protected void Update()

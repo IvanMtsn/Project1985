@@ -10,8 +10,8 @@ public class SimpleSpecialWeapon : MonoBehaviour, ISpecialWeapon
     float _lastTimeSinceFire = 2;
     bool _isFiring = false;
     [SerializeField] InputActionReference _fireSpecialRef;
-    [SerializeField] GameObject _firingPoint;
-    [SerializeField] GameObject _projectile;
+    [SerializeField] UnityEngine.GameObject _firingPoint;
+    [SerializeField] UnityEngine.GameObject _projectile;
     [SerializeField] Animator _animator;
     // Start is called before the first frame update
     void Start()
@@ -41,7 +41,7 @@ public class SimpleSpecialWeapon : MonoBehaviour, ISpecialWeapon
         _isFiring = true;
         _animator.SetTrigger("shoot");
         yield return new WaitForSeconds(0.42f);
-        GameObject projectile = Instantiate(_projectile, _firingPoint.transform.position, _firingPoint.transform.rotation);
+        UnityEngine.GameObject projectile = Instantiate(_projectile, _firingPoint.transform.position, _firingPoint.transform.rotation);
         //projectile.GetComponent<Rigidbody>().velocity = projectile.transform.forward * _projectileSpeed;
         projectile.GetComponent<Rigidbody>().AddForce(projectile.transform.forward * _projectileSpeed, ForceMode.VelocityChange);
         _isFiring = false;

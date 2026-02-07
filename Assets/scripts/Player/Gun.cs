@@ -31,16 +31,12 @@ public abstract class Gun : MonoBehaviour, IWeaponProperties, IItemSide
     protected IAmmo _ammoComponent;
     protected Animator _animator;
     protected bool _shotQueued;
-    protected void Start()
+    protected virtual void Start()
     {
         _ammoComponent = GetComponent<IAmmo>();
         _animator = GetComponent<Animator>();
-        if (_ammoComponent == null)
-        {
-            Debug.LogError($"NO IAmmo COMPONENT FOUND on {gameObject.name}!");
-        }
     }
-    protected void Update()
+    protected virtual void Update()
     {
         if (_lastTimeSinceFire < _firingCooldown)
         {
@@ -51,6 +47,7 @@ public abstract class Gun : MonoBehaviour, IWeaponProperties, IItemSide
             return;
         }
         HandleGunControls();
+        Debug.Log(_ammoComponent.CurrentLoadedAmmo);
     }
     protected void HandleGunControls()
     {
@@ -61,7 +58,7 @@ public abstract class Gun : MonoBehaviour, IWeaponProperties, IItemSide
         switch (_fireMode)
         {
             case FireMode.Fullauto:
-                if (firing && _lastTimeSinceFire >= _firingCooldown) Shoot();
+                if (firing && _lastTimeSinceFire >= _firingCooldown) { Shoot(); Debug.Log("leck"); }
                 break;
             case FireMode.Semiauto:
                 if (firePressed)

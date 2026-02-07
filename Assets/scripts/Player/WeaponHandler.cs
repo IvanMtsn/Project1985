@@ -6,13 +6,13 @@ using UnityEngine;
 
 public class WeaponHandler : MonoBehaviour
 {
-    public GameObject LeftWeapon;
-    public GameObject RightWeapon;
+    public UnityEngine.GameObject LeftWeapon;
+    public UnityEngine.GameObject RightWeapon;
     [SerializeField] Transform _leftWeaponHolder;
     [SerializeField] Transform _rightWeaponHolder;
-    [SerializeField] GameObject _weaponPickupPrefab;
-    [SerializeField] GameObject _fistsPrefab;
-    GameObject _weaponReadyToEquip;
+    [SerializeField] UnityEngine.GameObject _weaponPickupPrefab;
+    [SerializeField] UnityEngine.GameObject _fistsPrefab;
+    UnityEngine.GameObject _weaponReadyToEquip;
     bool _leftWeaponIsChangeable = false;
     bool _rightWeaponIsChangeable = false;
     public event Action<WeaponPickup, bool, bool> OnWeaponHoverEnter;
@@ -71,9 +71,9 @@ public class WeaponHandler : MonoBehaviour
         //Debug.Log(LeftWeapon);
         //Debug.Log(_isStandingAboveEquipableWeapon);
     }
-    void EquipWeapon(GameObject weapon, ItemSide side)
+    void EquipWeapon(UnityEngine.GameObject weapon, ItemSide side)
     {
-        GameObject droppedWeapon;
+        UnityEngine.GameObject droppedWeapon;
         if (side == ItemSide.left)
         {
             if (LeftWeapon != null && LeftWeapon.GetComponent<Weapon>().IsDroppable)

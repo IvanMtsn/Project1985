@@ -20,9 +20,9 @@ public class EffectsManager : MonoBehaviour
     }
     private void Start()
     {
-        if(GameObject.Find("Main Camera") != null)
+        if(UnityEngine.GameObject.Find("Main Camera") != null)
         {
-            _playerCam = GameObject.Find("Main Camera").transform;
+            _playerCam = UnityEngine.GameObject.Find("Main Camera").transform;
         }
     }
     void Update()
@@ -46,9 +46,9 @@ public class EffectsManager : MonoBehaviour
     }
     void FindPlayerCam()
     {
-        if (GameObject.Find("Main Camera") != null)
+        if (UnityEngine.GameObject.Find("Main Camera") != null)
         {
-            _playerCam = GameObject.Find("Main Camera").transform;
+            _playerCam = UnityEngine.GameObject.Find("Main Camera").transform;
         }
     }
 }

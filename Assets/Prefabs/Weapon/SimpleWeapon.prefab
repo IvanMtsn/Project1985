@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 766284558190947433}
   - component: {fileID: 5074522057670865500}
   - component: {fileID: 8501956046625590472}
-  - component: {fileID: 235755037877963283}
   - component: {fileID: 7135527527002441166}
   - component: {fileID: 7491867281765853507}
   m_Layer: 6
@@ -144,39 +143,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &235755037877963283
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8682566852438128596}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c519f7e1c941d449e870d0fb389049, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _weaponPickupPrefab: {fileID: 1525411785333316735, guid: 79ad2ac892d1c7147a73814e1ba25a5b,
-    type: 3}
-  _firingCooldown: 0.1
-  _burstCooldown: 0.05
-  _burstAmount: 5
-  _reloadTime: 1.5
-  _damage: 3
-  _ammoCost: 1
-  _maxReserveAmmo: 200
-  _currentReserveAmmo: 200
-  _maxLoadedAmmo: 25
-  _currentLoadedAmmo: 25
-  _visualFirePoint: {fileID: 8190411943286785392}
-  _fireMode: 0
-  _isDroppable: 1
-  WeaponsideOfWeapon: 0
-  _maxShotDistance: 100
-  _spreadAngle: 0.04
-  _hitMask:
-    serializedVersion: 2
-    m_Bits: 384
 --- !u!114 &7135527527002441166
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,7 +167,7 @@ MonoBehaviour:
   _maxShotDistance: 100
   _hitMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 384
 --- !u!114 &7491867281765853507
 MonoBehaviour:
   m_ObjectHideFlags: 0

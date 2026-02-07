@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class ReloadableComponent : MonoBehaviour, IAmmo, IAmmoPickupReloadable
@@ -9,8 +10,8 @@ public class ReloadableComponent : MonoBehaviour, IAmmo, IAmmoPickupReloadable
     [SerializeField] float _currentLoadedAmmo;
     [SerializeField] float _reloadTime;
     public bool IsReloading { get; protected set; } = false;
-    public float CurrentLoadedAmmo {  get;  set; }
-    public float MaxLoadedAmmo { get; set; }
+    public float CurrentLoadedAmmo { get { return _currentLoadedAmmo;  } set { _currentLoadedAmmo = value; } }
+    public float MaxLoadedAmmo { get { return _maxLoadedAmmo; } set { _maxLoadedAmmo = value; } }
     public float CurrentReserveAmmo => _currentReserveAmmo;
     public float MaxReserveAmmo => _maxReserveAmmo;
     Animator _animator;

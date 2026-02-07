@@ -16,8 +16,8 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] TMP_Text _rightWeaponReserveAmmo;
     [SerializeField] Image _dashIndicator;
     [SerializeField] Image _healthIndicator;
-    [SerializeField] GameObject SwitchPromptL;
-    [SerializeField] GameObject SwitchPromptR;
+    [SerializeField] UnityEngine.GameObject SwitchPromptL;
+    [SerializeField] UnityEngine.GameObject SwitchPromptR;
     PlayerStats _playerStats;
     PlayerMovementV2 _pMov;
     WeaponHandler _weaponHandler;
@@ -33,8 +33,8 @@ public class PlayerUI : MonoBehaviour
     void Update()
     {
         DisplayStats();
-        DisplayAmmo(_weaponHandler.LeftWeapon.GetComponent<Weapon>(), _leftWeaponCurrentAmmo, _leftWeaponIsReloading, _leftWeaponReserveAmmo);
-        DisplayAmmo(_weaponHandler.RightWeapon.GetComponent<Weapon>(), _rightWeaponCurrentAmmo, _rightWeaponIsReloading, _rightWeaponReserveAmmo);
+        DisplayAmmo(_weaponHandler.LeftWeapon);
+        DisplayAmmo(_weaponHandler.RightWeapon);
     }
     void DisplayStats()
     {
@@ -42,19 +42,21 @@ public class PlayerUI : MonoBehaviour
         _healthIndicator.fillAmount = Mathf.Clamp(_playerStats.Health * 0.01f, 0, 1);
         _dashIndicator.fillAmount = Mathf.MoveTowards(_dashIndicator.fillAmount, (_pMov.LastTimeSinceDash / _pMov.DashCooldown), 6f * Time.deltaTime);
     }
-    void DisplayAmmo(Weapon weapon, TMP_Text loadedAmmoText, TMP_Text isReloadingText, TMP_Text reserveAmmoText)
+    void DisplayAmmo(GameObject weapon)
     {
-        if (weapon != null)
-        {
-            loadedAmmoText.text = $"{weapon.CurrentLoadedAmmo}/{weapon.MaxLoadedAmmo}";
-            isReloadingText.gameObject.SetActive(weapon.IsReloading);
-            reserveAmmoText.text = weapon.CurrentReserveAmmo.ToString();
-        }
-        else
-        {
-            loadedAmmoText.text = "--/--";
-            reserveAmmoText.text = "---";
-        }
+        //var loadedAmmoText
+        //if (weapon != null)
+        //{
+        //    if(weapon.)
+        //    loadedAmmoText.text = $"{weapon.CurrentLoadedAmmo}/{weapon.MaxLoadedAmmo}";
+        //    isReloadingText.gameObject.SetActive(weapon.IsReloading);
+        //    reserveAmmoText.text = weapon.CurrentReserveAmmo.ToString();
+        //}
+        //else
+        //{
+        //    loadedAmmoText.text = "--/--";
+        //    reserveAmmoText.text = "---";
+        //}
     }
     void DisplayWeaponSwitchPrompt(WeaponPickup weaponPickup, bool leftWeapon, bool rightWeapon)
     {

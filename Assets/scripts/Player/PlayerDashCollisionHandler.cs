@@ -6,14 +6,14 @@ public class PlayerDashCollisionHandler : MonoBehaviour
 {
     PlayerMovementV2 _pMov;
     [SerializeField] LayerMask _pushableObjectsMask;
-    List<GameObject> _contactedObjects;
+    List<UnityEngine.GameObject> _contactedObjects;
     [SerializeField] AudioClip _stunClip;
     [SerializeField] AudioClip _dashStopClip;
     [SerializeField] AudioClip _dashCollideClip;
     void Start()
     {
         _pMov = GetComponent<PlayerMovementV2>();
-        _contactedObjects = new List<GameObject>();
+        _contactedObjects = new List<UnityEngine.GameObject>();
     }
     private void Update()
     {

@@ -15,7 +15,7 @@ public class SimpleEnemy : Enemy
     protected override void Start()
     {
         base.Start();
-        _playerPos = GameObject.FindGameObjectWithTag("Player").transform;
+        _playerPos = UnityEngine.GameObject.FindGameObjectWithTag("Player").transform;
     }
     protected override void FixedUpdate()
     {

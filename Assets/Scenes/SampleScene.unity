@@ -6964,31 +6964,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1833174863}
     m_Modifications:
-    - target: {fileID: 235755037877963283, guid: dbeae50a6634a4848b34284a5e7d68f8,
-        type: 3}
-      propertyPath: _cc
-      value: 
-      objectReference: {fileID: 1288143491}
-    - target: {fileID: 235755037877963283, guid: dbeae50a6634a4848b34284a5e7d68f8,
-        type: 3}
-      propertyPath: Weaponside
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 235755037877963283, guid: dbeae50a6634a4848b34284a5e7d68f8,
-        type: 3}
-      propertyPath: _firePoint
-      value: 
-      objectReference: {fileID: 2088825936}
-    - target: {fileID: 235755037877963283, guid: dbeae50a6634a4848b34284a5e7d68f8,
-        type: 3}
-      propertyPath: WeaponsideOfWeapon
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 235755037877963283, guid: dbeae50a6634a4848b34284a5e7d68f8,
-        type: 3}
-      propertyPath: _currentReserveAmmo
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 4310869560710767896, guid: dbeae50a6634a4848b34284a5e7d68f8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7039,6 +7014,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7135527527002441166, guid: dbeae50a6634a4848b34284a5e7d68f8,
+        type: 3}
+      propertyPath: _firePoint
+      value: 
+      objectReference: {fileID: 2088825936}
     - target: {fileID: 8682566852438128596, guid: dbeae50a6634a4848b34284a5e7d68f8,
         type: 3}
       propertyPath: m_Name
