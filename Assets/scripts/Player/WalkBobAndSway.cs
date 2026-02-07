@@ -12,6 +12,9 @@ public class WalkBobAndSway : MonoBehaviour
     Vector3 _ogPosition;
     bool _wasGrounded;
     float _landingForce;
+    [SerializeField] AudioClip _footstepClip;
+    float _footStepTimer = 0.2f;
+    float _fsTimerProgress = 0; 
     void Start()
     {
         _animator = GetComponent<Animator>();
@@ -24,7 +27,7 @@ public class WalkBobAndSway : MonoBehaviour
         _move = InputManager.Instance.Move;
         if (Mathf.Abs(_move.x) < 0.1f) { _move.x = 0; }
         if(Mathf.Abs(_move.y) < 0.1f) { _move.y = 0; }
-        _animator.SetBool("moving", _move != Vector3.zero && _pMov.GroundCheck.IsGrounded);
+        _animator.SetBool("moving", _move != Vector3.zero && _pMov.GroundCheck.IsGrounded && !_pMov.IsDashing);
         _animator.SetFloat("velX", _move.x,0.05f, Time.deltaTime);
         _animator.SetFloat("velZ", _move.y,0.05f, Time.deltaTime);
         //weapon sway stuff:
@@ -33,7 +36,7 @@ public class WalkBobAndSway : MonoBehaviour
         if (!_pMov.GroundCheck.IsGrounded || (_pMov.GroundCheck.IsGrounded && _pMov.IsDashing))
         {
             Vector3 leck = transform.InverseTransformDirection(_pMov.Rb.linearVelocity);
-            Vector3 sway = new Vector3(-leck.x / 140, -leck.y / 110, -leck.z / 75);
+            Vector3 sway = new Vector3(-leck.x / 170, -leck.y / 110, -leck.z / 100);
             _wSway.localPosition = Vector3.Lerp(_wSway.localPosition, sway, Time.deltaTime * 12f);
         }
         else if (_pMov.GroundCheck.IsGrounded)
@@ -48,5 +51,11 @@ public class WalkBobAndSway : MonoBehaviour
         {
             _landingForce = Mathf.Min(Mathf.Abs(_pMov.Rb.linearVelocity.y) / 10, 3f);
         }
+    }
+    public void PlayFootStepClip()
+    {
+        if (Time.time - _fsTimerProgress < _footStepTimer) { return; }
+        _fsTimerProgress = Time.time;
+        AudioManager.Instance.PlaySound(_footstepClip, 0.4f);
     }
 }

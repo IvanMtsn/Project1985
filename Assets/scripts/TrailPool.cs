@@ -2,39 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrailPool : MonoBehaviour
+public class TrailPool : ObjectPool<LineRenderer>
 {
-    public static TrailPool Instance;
-    [SerializeField] LineRenderer _linePrefab;
-    Queue<LineRenderer> _pool = new Queue<LineRenderer>();
-
-    private void Awake()
+    public void ShootTrail(Vector3 start, Vector3 end, float duration)
     {
-        Instance = this;
+        StartCoroutine(ShootTrailCoroutine(start, end, duration));
     }
-    public LineRenderer Get()
-    {
-        if(_pool == null)
-        {
-            _pool = new Queue<LineRenderer>();
-        }
-        if(_pool.Count > 0)
-        {
-            LineRenderer line = _pool.Dequeue();
-            line.gameObject.SetActive(true);
-            return line;
-        }
-        else
-        {
-            return Instantiate(_linePrefab);
-        }
-    }
-    public void Return(LineRenderer line)
-    {
-        line.gameObject.SetActive(false);
-        _pool.Enqueue(line);
-    }
-    public IEnumerator ShootTrail(Vector3 start, Vector3 end, float duration)
+    public IEnumerator ShootTrailCoroutine(Vector3 start, Vector3 end, float duration)
     {
         LineRenderer line = Get();
         line.SetPosition(0, start);

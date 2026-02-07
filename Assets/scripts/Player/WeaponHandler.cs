@@ -22,12 +22,12 @@ public class WeaponHandler : MonoBehaviour
         if(_leftWeaponHolder.childCount > 0)
         {
             LeftWeapon = _leftWeaponHolder.GetChild(0).gameObject;
-            LeftWeapon.GetComponent<Weapon>().WeaponsideOfWeapon = Weaponside.left;
+            LeftWeapon.GetComponent<IItemSide>().Itemside = ItemSide.left;
         }
         if(_rightWeaponHolder.childCount > 0)
         {
             RightWeapon = _rightWeaponHolder.GetChild(0).gameObject;
-            RightWeapon.GetComponent<Weapon>().WeaponsideOfWeapon = Weaponside.right;
+            RightWeapon.GetComponent<IItemSide>().Itemside = ItemSide.right;
         }
     }
     void Update()
@@ -40,7 +40,7 @@ public class WeaponHandler : MonoBehaviour
                 float wpLoadedAmmo = weaponPickup.CurrentLoadedAmmo;
                 float wpReserveAmmo = weaponPickup.CurrentReserveAmmo;
 
-                EquipWeapon(weaponPickup.WeaponPrefab, Weaponside.left);
+                EquipWeapon(weaponPickup.WeaponPrefab, ItemSide.left);
                 LeftWeapon.GetComponent<Weapon>().SetAmmo(wpLoadedAmmo, wpReserveAmmo);
                 UnassignWeapon();
             }
@@ -53,7 +53,7 @@ public class WeaponHandler : MonoBehaviour
                 float wpLoadedAmmo = weaponPickup.CurrentLoadedAmmo;
                 float wpReserveAmmo = weaponPickup.CurrentReserveAmmo;
 
-                EquipWeapon(weaponPickup.WeaponPrefab, Weaponside.right);
+                EquipWeapon(weaponPickup.WeaponPrefab, ItemSide.right);
                 RightWeapon.GetComponent<Weapon>().SetAmmo(wpLoadedAmmo, wpReserveAmmo);
                 UnassignWeapon();
             }
@@ -61,20 +61,20 @@ public class WeaponHandler : MonoBehaviour
         if (InputManager.Instance.DropWeaponLeft)
         {
             _weaponReadyToEquip = null;
-            EquipWeapon(_fistsPrefab, Weaponside.left);
+            EquipWeapon(_fistsPrefab, ItemSide.left);
         }
         if (InputManager.Instance.DropWeaponRight && ! RightWeapon.name.Contains(_fistsPrefab.name))
         {
             _weaponReadyToEquip = null;
-            EquipWeapon(_fistsPrefab, Weaponside.right);
+            EquipWeapon(_fistsPrefab, ItemSide.right);
         }
         //Debug.Log(LeftWeapon);
         //Debug.Log(_isStandingAboveEquipableWeapon);
     }
-    void EquipWeapon(GameObject weapon, Weaponside side)
+    void EquipWeapon(GameObject weapon, ItemSide side)
     {
         GameObject droppedWeapon;
-        if (side == Weaponside.left)
+        if (side == ItemSide.left)
         {
             if (LeftWeapon != null && LeftWeapon.GetComponent<Weapon>().IsDroppable)
             {
@@ -91,7 +91,7 @@ public class WeaponHandler : MonoBehaviour
                 LeftWeapon = null;
             }
             LeftWeapon = Instantiate(weapon, _leftWeaponHolder);
-            LeftWeapon.GetComponent<Weapon>().WeaponsideOfWeapon = side;
+            LeftWeapon.GetComponent<IItemSide>().Itemside = side;
         }
         else
         {
@@ -109,7 +109,7 @@ public class WeaponHandler : MonoBehaviour
                 RightWeapon = null;
             }
             RightWeapon = Instantiate(weapon, _rightWeaponHolder);
-            RightWeapon.GetComponent<Weapon>().WeaponsideOfWeapon = side;
+            RightWeapon.GetComponent<IItemSide>().Itemside = side;
         }
         if(_weaponReadyToEquip)
         {

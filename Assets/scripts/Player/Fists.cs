@@ -8,8 +8,8 @@ public class Fists : Weapon
     protected override void Start()
     {
         base.Start();
-        transform.localScale *= WeaponsideOfWeapon == Weaponside.right ? -1 : 1;
-        _hitAnimStateName = WeaponsideOfWeapon == Weaponside.right ? "Attack_R" : "Attack_L";
+        transform.localScale *= WeaponsideOfWeapon == ItemSide.right ? -1 : 1;
+        _hitAnimStateName = WeaponsideOfWeapon == ItemSide.right ? "Attack_R" : "Attack_L";
     }
     protected override void Shoot()
     {

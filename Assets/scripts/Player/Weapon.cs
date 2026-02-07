@@ -33,7 +33,7 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected FireMode _fireMode;
     [SerializeField] protected bool _isDroppable;
     public bool IsDroppable => _isDroppable;
-    public Weaponside WeaponsideOfWeapon;
+    public ItemSide WeaponsideOfWeapon;
     protected Transform _firePoint;
 
     protected virtual void Start()
@@ -56,9 +56,9 @@ public abstract class Weapon : MonoBehaviour
     }
     protected void HandleGunControls()
     {
-        bool firing = (WeaponsideOfWeapon == Weaponside.left) ? InputManager.Instance.FiringLeft : InputManager.Instance.FiringRight;
-        bool firePressed = (WeaponsideOfWeapon == Weaponside.left) ? InputManager.Instance.FirePressedLeft : InputManager.Instance.FirePressedRight;
-        bool reloadPressed = (WeaponsideOfWeapon == Weaponside.left) ? InputManager.Instance.ReloadLeft : InputManager.Instance.ReloadRight;
+        bool firing = (WeaponsideOfWeapon == ItemSide.left) ? InputManager.Instance.FiringLeft : InputManager.Instance.FiringRight;
+        bool firePressed = (WeaponsideOfWeapon == ItemSide.left) ? InputManager.Instance.FirePressedLeft : InputManager.Instance.FirePressedRight;
+        bool reloadPressed = (WeaponsideOfWeapon == ItemSide.left) ? InputManager.Instance.ReloadLeft : InputManager.Instance.ReloadRight;
         //Lord help me
         switch (_fireMode)
         {

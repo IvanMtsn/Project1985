@@ -14,10 +14,13 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
     bool _isInvincible = false;
     float _hitInvincibleTimer = 0.3f; 
     [SerializeField] CameraController _cameraController;
+    PlayerMovementV2 _pMov;
     Coroutine _healingCoroutine;
+    bool _isDashingButForStats;
     void Start()
     {
         Health = MaxHealth;
+        _pMov = GetComponent<PlayerMovementV2>();
     }
     void Update()
     {
@@ -30,6 +33,7 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
                 _currentHealTimer = 0;
             }
         }
+        _isDashingButForStats = _pMov.IsDashing;
     }
     public void TakeDamage(float damage)
     {
@@ -40,8 +44,8 @@ public class PlayerStats : MonoBehaviour, IDamageableEntity
             _isHealing = false;
         }
         Invicibility(_hitInvincibleTimer);
-        _cameraController.ShakeCamera(damage/3);
-        Health -= damage;
+        _cameraController.ShakeCamera(damage/3f);
+        Health -= Mathf.Floor(damage * (_isDashingButForStats ? 0.5f : 1f));
         _currentHealTimer = 0;
         if (Health <= 0)
         {

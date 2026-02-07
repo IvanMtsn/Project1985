@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum Weaponside
+public enum ItemSide
 {
     left,
     right
