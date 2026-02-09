@@ -6,66 +6,76 @@ using UnityEngine;
 
 public class WeaponHandler : MonoBehaviour
 {
-    public UnityEngine.GameObject LeftWeapon;
-    public UnityEngine.GameObject RightWeapon;
-    [SerializeField] Transform _leftWeaponHolder;
-    [SerializeField] Transform _rightWeaponHolder;
-    [SerializeField] UnityEngine.GameObject _weaponPickupPrefab;
+    public UnityEngine.GameObject LeftItem;
+    public UnityEngine.GameObject RightItem;
+    [SerializeField] Transform _leftItemHolder;
+    [SerializeField] Transform _rightItemHolder;
     [SerializeField] UnityEngine.GameObject _fistsPrefab;
-    UnityEngine.GameObject _weaponReadyToEquip;
-    bool _leftWeaponIsChangeable = false;
-    bool _rightWeaponIsChangeable = false;
-    public event Action<WeaponPickup, bool, bool> OnWeaponHoverEnter;
-    public event Action OnWeaponHoverExit;
+    UnityEngine.GameObject _itemReadyToEquip;
+    bool _leftItemIsChangeable = false;
+    bool _rightItemIsChangeable = false;
+    public event Action<WeaponPickup, bool, bool> OnItemHoverEnter;
+    public event Action OnItemHoverExit;
     void Start()
     {
-        if(_leftWeaponHolder.childCount > 0)
+        if(_leftItemHolder.childCount > 0)
         {
-            LeftWeapon = _leftWeaponHolder.GetChild(0).gameObject;
-            LeftWeapon.GetComponent<IItemSide>().Itemside = ItemSide.left;
+            LeftItem = _leftItemHolder.GetChild(0).gameObject;
+            LeftItem.GetComponent<IItem>().Itemside = ItemSide.left;
         }
-        if(_rightWeaponHolder.childCount > 0)
+        if(_rightItemHolder.childCount > 0)
         {
-            RightWeapon = _rightWeaponHolder.GetChild(0).gameObject;
-            RightWeapon.GetComponent<IItemSide>().Itemside = ItemSide.right;
+            RightItem = _rightItemHolder.GetChild(0).gameObject;
+            RightItem.GetComponent<IItem>().Itemside = ItemSide.right;
         }
     }
     void Update()
     {
-        if (_leftWeaponIsChangeable)
+        if (_leftItemIsChangeable)
         {
-            if (InputManager.Instance.SwitchWeaponLeft && _weaponReadyToEquip != null)
+            if (InputManager.Instance.SwitchWeaponLeft && _itemReadyToEquip != null)
             {
-                var weaponPickup = _weaponReadyToEquip.GetComponent<WeaponPickup>();
-                float wpLoadedAmmo = weaponPickup.CurrentLoadedAmmo;
-                float wpReserveAmmo = weaponPickup.CurrentReserveAmmo;
+                var itemPickup = _itemReadyToEquip;
+                if(_itemReadyToEquip.GetComponent<IAmmo>() != null)
+                {
+                    float wpLoadedAmmo = itemPickup.GetComponent<IAmmo>().CurrentLoadedAmmo;
+                    if (_itemReadyToEquip.GetComponent<ReloadableComponent>() != null)
+                    {
+                        float wpReserveAmmo = itemPickup.GetComponent<ReloadableComponent>().CurrentReserveAmmo;
+                        //itemPickup.GetComponent<IAmmoPickupReloadable>().SetAmmo(wpLoadedAmmo, wpReserveAmmo);
+                    }
+                    else
+                    {
+                        //itemPickup.GetComponent<IAmmoPickupNonReloadable>().SetAmmo(wpLoadedAmmo);
+                    }
+                }
 
-                EquipWeapon(weaponPickup.WeaponPrefab, ItemSide.left);
-                LeftWeapon.GetComponent<Weapon>().SetAmmo(wpLoadedAmmo, wpReserveAmmo);
+                //EquipWeapon(itemPickup.WeaponPrefab, ItemSide.left);
+                //LeftItem.GetComponent<Weapon>().SetAmmo(wpLoadedAmmo, wpReserveAmmo);
                 UnassignWeapon();
             }
         }
-        if(_rightWeaponIsChangeable)
+        if(_rightItemIsChangeable)
         {
-            if (InputManager.Instance.SwitchWeaponRight && _weaponReadyToEquip != null)
+            if (InputManager.Instance.SwitchWeaponRight && _itemReadyToEquip != null)
             {
-                var weaponPickup = _weaponReadyToEquip.GetComponent<WeaponPickup>();
+                var weaponPickup = _itemReadyToEquip.GetComponent<WeaponPickup>();
                 float wpLoadedAmmo = weaponPickup.CurrentLoadedAmmo;
                 float wpReserveAmmo = weaponPickup.CurrentReserveAmmo;
 
-                EquipWeapon(weaponPickup.WeaponPrefab, ItemSide.right);
-                RightWeapon.GetComponent<Weapon>().SetAmmo(wpLoadedAmmo, wpReserveAmmo);
+                //EquipWeapon(weaponPickup.WeaponPrefab, ItemSide.right);
+                RightItem.GetComponent<Weapon>().SetAmmo(wpLoadedAmmo, wpReserveAmmo);
                 UnassignWeapon();
             }
         }
         if (InputManager.Instance.DropWeaponLeft)
         {
-            _weaponReadyToEquip = null;
+            _itemReadyToEquip = null;
             EquipWeapon(_fistsPrefab, ItemSide.left);
         }
-        if (InputManager.Instance.DropWeaponRight && ! RightWeapon.name.Contains(_fistsPrefab.name))
+        if (InputManager.Instance.DropWeaponRight && ! RightItem.name.Contains(_fistsPrefab.name))
         {
-            _weaponReadyToEquip = null;
+            _itemReadyToEquip = null;
             EquipWeapon(_fistsPrefab, ItemSide.right);
         }
         //Debug.Log(LeftWeapon);
@@ -76,75 +86,75 @@ public class WeaponHandler : MonoBehaviour
         UnityEngine.GameObject droppedWeapon;
         if (side == ItemSide.left)
         {
-            if (LeftWeapon != null && LeftWeapon.GetComponent<Weapon>().IsDroppable)
+            if (LeftItem != null && LeftItem.GetComponent<Weapon>().IsDroppable)
             {
                 droppedWeapon = 
-                    Instantiate(LeftWeapon.GetComponent<Weapon>().WeaponPickupPrefab, LeftWeapon.transform.position, Quaternion.identity);
+                    Instantiate(LeftItem.GetComponent<Weapon>().WeaponPickupPrefab, LeftItem.transform.position, Quaternion.identity);
 
                 droppedWeapon.GetComponent<WeaponPickup>()
-                    .SetAmmo(LeftWeapon.GetComponent<Weapon>().CurrentLoadedAmmo, LeftWeapon.GetComponent<Weapon>().CurrentReserveAmmo);
+                    .SetAmmo(LeftItem.GetComponent<Weapon>().CurrentLoadedAmmo, LeftItem.GetComponent<Weapon>().CurrentReserveAmmo);
 
             }
-            if (LeftWeapon)
+            if (LeftItem)
             {
-                Destroy(LeftWeapon);
-                LeftWeapon = null;
+                Destroy(LeftItem);
+                LeftItem = null;
             }
-            LeftWeapon = Instantiate(weapon, _leftWeaponHolder);
-            LeftWeapon.GetComponent<IItemSide>().Itemside = side;
+            LeftItem = Instantiate(weapon, _leftItemHolder);
+            LeftItem.GetComponent<IItem>().Itemside = side;
         }
         else
         {
-            if(RightWeapon != null && RightWeapon.GetComponent<Weapon>().IsDroppable)
+            if(RightItem != null && RightItem.GetComponent<Weapon>().IsDroppable)
             {
                 droppedWeapon =
-                    Instantiate(RightWeapon.GetComponent<Weapon>().WeaponPickupPrefab, RightWeapon.transform.position, Quaternion.identity);
+                    Instantiate(RightItem.GetComponent<Weapon>().WeaponPickupPrefab, RightItem.transform.position, Quaternion.identity);
 
                 droppedWeapon.GetComponent<WeaponPickup>()
-                    .SetAmmo(RightWeapon.GetComponent<Weapon>().CurrentLoadedAmmo, RightWeapon.GetComponent<Weapon>().CurrentReserveAmmo);
+                    .SetAmmo(RightItem.GetComponent<Weapon>().CurrentLoadedAmmo, RightItem.GetComponent<Weapon>().CurrentReserveAmmo);
             }
-            if (RightWeapon)
+            if (RightItem)
             {
-                Destroy(RightWeapon);
-                RightWeapon = null;
+                Destroy(RightItem);
+                RightItem = null;
             }
-            RightWeapon = Instantiate(weapon, _rightWeaponHolder);
-            RightWeapon.GetComponent<IItemSide>().Itemside = side;
+            RightItem = Instantiate(weapon, _rightItemHolder);
+            RightItem.GetComponent<IItem>().Itemside = side;
         }
-        if(_weaponReadyToEquip)
+        if(_itemReadyToEquip)
         {
-            Destroy(_weaponReadyToEquip);
-            _weaponReadyToEquip = null;
+            Destroy(_itemReadyToEquip);
+            _itemReadyToEquip = null;
         }
     }
     void UnassignWeapon()
     {
-        _rightWeaponIsChangeable = false;
-        _leftWeaponIsChangeable = false;
-        _weaponReadyToEquip = null;
+        _rightItemIsChangeable = false;
+        _leftItemIsChangeable = false;
+        _itemReadyToEquip = null;
     }
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("WeaponPickup")) { return; }
 
-        OnWeaponHoverExit?.Invoke();
+        OnItemHoverExit?.Invoke();
 
-        _weaponReadyToEquip = other.gameObject;
-        var pickup = _weaponReadyToEquip.GetComponent<WeaponPickup>();
-        _leftWeaponIsChangeable = !LeftWeapon.name.Contains(pickup.WeaponPrefab.name);
-        _rightWeaponIsChangeable = !RightWeapon.name.Contains(pickup.WeaponPrefab.name);
-        OnWeaponHoverEnter?.Invoke(pickup, _leftWeaponIsChangeable, _rightWeaponIsChangeable);
+        _itemReadyToEquip = other.gameObject;
+        var pickup = _itemReadyToEquip.GetComponent<WeaponPickup>();
+        //_leftItemIsChangeable = !LeftItem.name.Contains(pickup.WeaponPrefab.name);
+        //_rightItemIsChangeable = !RightItem.name.Contains(pickup.WeaponPrefab.name);
+        OnItemHoverEnter?.Invoke(pickup, _leftItemIsChangeable, _rightItemIsChangeable);
 
-        if(!_leftWeaponIsChangeable && !_rightWeaponIsChangeable)
+        if(!_leftItemIsChangeable && !_rightItemIsChangeable)
         {
-            bool isLeftWeaponFull = LeftWeapon.GetComponent<Weapon>().CurrentLoadedAmmo == LeftWeapon.GetComponent<Weapon>().MaxLoadedAmmo;
-            bool isRightWeaponFull = RightWeapon.GetComponent<Weapon>().CurrentLoadedAmmo == RightWeapon.GetComponent<Weapon>().MaxLoadedAmmo;
+            bool isLeftWeaponFull = LeftItem.GetComponent<Weapon>().CurrentLoadedAmmo == LeftItem.GetComponent<Weapon>().MaxLoadedAmmo;
+            bool isRightWeaponFull = RightItem.GetComponent<Weapon>().CurrentLoadedAmmo == RightItem.GetComponent<Weapon>().MaxLoadedAmmo;
             //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
             if(pickup.CurrentLoadedAmmo == 1)
             {
                 //Debug.Log("case 1");
-                var weaponToRefill = LeftWeapon.GetComponent<Weapon>().CurrentLoadedAmmo < LeftWeapon.GetComponent<Weapon>().MaxLoadedAmmo
-                    ? LeftWeapon : RightWeapon;
+                var weaponToRefill = LeftItem.GetComponent<Weapon>().CurrentLoadedAmmo < LeftItem.GetComponent<Weapon>().MaxLoadedAmmo
+                    ? LeftItem : RightItem;
                 weaponToRefill.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
             }
             if ((!isLeftWeaponFull && !isRightWeaponFull )|| ( isLeftWeaponFull && isRightWeaponFull))
@@ -153,15 +163,15 @@ public class WeaponHandler : MonoBehaviour
 
                 float splitLoadedAmmo = pickup.CurrentLoadedAmmo / 2;
                 float splitReserveAmmo = pickup.CurrentReserveAmmo / 2;
-                LeftWeapon.GetComponent<Weapon>().PickupReload(splitLoadedAmmo, splitReserveAmmo, pickup);
-                RightWeapon.GetComponent<Weapon>().PickupReload(splitLoadedAmmo, splitReserveAmmo, pickup);
+                LeftItem.GetComponent<Weapon>().PickupReload(splitLoadedAmmo, splitReserveAmmo, pickup);
+                RightItem.GetComponent<Weapon>().PickupReload(splitLoadedAmmo, splitReserveAmmo, pickup);
                 //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
             }
             else if(!isLeftWeaponFull)
             {
                 //Debug.Log("case 3");
 
-                LeftWeapon.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
+                LeftItem.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
                 //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
 
             }
@@ -169,25 +179,25 @@ public class WeaponHandler : MonoBehaviour
             {
                 //Debug.Log("case 4");
 
-                RightWeapon.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
+                RightItem.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
                 //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
 
             }
         }
-        else if(!_leftWeaponIsChangeable)
+        else if(!_leftItemIsChangeable)
         {
             //Debug.Log("case 5");
 
             //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
-            LeftWeapon.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
+            LeftItem.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
             //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
         }
-        else if(!_rightWeaponIsChangeable)
+        else if(!_rightItemIsChangeable)
         {
             //Debug.Log("case 6");
 
             //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
-            RightWeapon.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
+            RightItem.GetComponent<Weapon>().PickupReload(pickup.CurrentLoadedAmmo, pickup.CurrentReserveAmmo, pickup);
             //Debug.Log($"loaded {pickup.CurrentLoadedAmmo} reserve {pickup.CurrentReserveAmmo}");
         }
     }
@@ -195,15 +205,15 @@ public class WeaponHandler : MonoBehaviour
     {
         if (other.CompareTag("WeaponPickup"))
         {
-            if (other.gameObject == _weaponReadyToEquip)
+            if (other.gameObject == _itemReadyToEquip)
             {
                 UnassignWeapon();
-                OnWeaponHoverExit?.Invoke();
+                OnItemHoverExit?.Invoke();
             }
         }
     }
     public void TriggerWeaponHoverExit()
     {
-        OnWeaponHoverExit?.Invoke();
+        OnItemHoverExit?.Invoke();
     }
 }

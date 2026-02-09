@@ -1685,7 +1685,7 @@ GameObject:
   m_Component:
   - component: {fileID: 259779255}
   m_Layer: 0
-  m_Name: LeftWeaponHolder
+  m_Name: LeftItemHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5083,7 +5083,7 @@ GameObject:
   m_Component:
   - component: {fileID: 753606751}
   m_Layer: 0
-  m_Name: WeaponSway
+  m_Name: Sway
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6521,7 +6521,7 @@ GameObject:
   - component: {fileID: 1035628044}
   - component: {fileID: 1035628045}
   m_Layer: 0
-  m_Name: WeaponHolder
+  m_Name: ItemHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9502,7 +9502,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1833174863}
   m_Layer: 0
-  m_Name: RightWeaponHolder
+  m_Name: RightItemHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9537,13 +9537,13 @@ GameObject:
   - component: {fileID: 1847066903}
   - component: {fileID: 1847066902}
   - component: {fileID: 1847066906}
-  - component: {fileID: 1847066907}
   - component: {fileID: 1847066908}
   - component: {fileID: 1847066909}
   - component: {fileID: 1847066911}
   - component: {fileID: 1847066910}
   - component: {fileID: 1847066912}
   - component: {fileID: 1847066913}
+  - component: {fileID: 1847066914}
   m_Layer: 3
   m_Name: player
   m_TagString: Player
@@ -9673,23 +9673,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!114 &1847066907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1847066901}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 216097d432fbc8c4c9e40a7fededdb69, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MoveSpeed: 12
-  PlayerCam: {fileID: 963194227}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 256
 --- !u!114 &1847066908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9738,12 +9721,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7091d75a0f66a24da3752dd45409733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LeftWeapon: {fileID: 0}
-  RightWeapon: {fileID: 0}
-  _leftWeaponHolder: {fileID: 259779255}
-  _rightWeaponHolder: {fileID: 1833174863}
-  _weaponPickupPrefab: {fileID: 1525411785333316735, guid: 79ad2ac892d1c7147a73814e1ba25a5b,
-    type: 3}
+  LeftItem: {fileID: 0}
+  RightItem: {fileID: 0}
+  _leftItemHolder: {fileID: 259779255}
+  _rightItemHolder: {fileID: 1833174863}
   _fistsPrefab: {fileID: 5332391096478542541, guid: 8e11a630467a7014094053136367b470,
     type: 3}
 --- !u!114 &1847066911
@@ -9884,6 +9865,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1847066914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847066901}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 215d0fb7bac07584eb2eca420046dec4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LeftItem: {fileID: 0}
+  RightItem: {fileID: 0}
+  _leftItemHolder: {fileID: 259779255}
+  _rightItemHolder: {fileID: 1833174863}
 --- !u!1001 &1858696881
 PrefabInstance:
   m_ObjectHideFlags: 0

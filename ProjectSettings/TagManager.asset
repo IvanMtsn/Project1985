@@ -5,7 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Enemy
-  - WeaponPickup
+  - playerBullet
+  - ItemPickup
   layers:
   - Default
   - TransparentFX

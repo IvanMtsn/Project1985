@@ -23,7 +23,7 @@ public class HitScanWeaponComponent : Gun
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                hit.collider.GetComponent<IDamageableEntity>().TakeDamage(Damage);
+                hit.collider.GetComponent<IDamageableEntity>().TakeDamage(_damage);
             }
         }
         if (_trailPool == null)

@@ -27,14 +27,14 @@ public class PlayerUI : MonoBehaviour
         _pMov = GetComponent<PlayerMovementV2>();
         _weaponHandler = GetComponent<WeaponHandler>();
         _healthIndicator.fillAmount = _playerStats.Health * 0.01f;
-        _weaponHandler.OnWeaponHoverEnter += DisplayWeaponSwitchPrompt;
-        _weaponHandler.OnWeaponHoverExit += HideWeaponSwitchPrompt;
+        _weaponHandler.OnItemHoverEnter += DisplayWeaponSwitchPrompt;
+        _weaponHandler.OnItemHoverExit += HideWeaponSwitchPrompt;
     }
     void Update()
     {
         DisplayStats();
-        DisplayAmmo(_weaponHandler.LeftWeapon);
-        DisplayAmmo(_weaponHandler.RightWeapon);
+        DisplayAmmo(_weaponHandler.LeftItem);
+        DisplayAmmo(_weaponHandler.RightItem);
     }
     void DisplayStats()
     {
@@ -60,18 +60,18 @@ public class PlayerUI : MonoBehaviour
     }
     void DisplayWeaponSwitchPrompt(WeaponPickup weaponPickup, bool leftWeapon, bool rightWeapon)
     {
-        if(leftWeapon)
-        {
-            SwitchPromptL.SetActive(true);
-            SwitchPromptL.GetComponentInChildren<TMP_Text>().text = $"{InputManager.Instance.GetBind("SwitchWeaponLeft")} to switch weapon to:";
-            SwitchPromptL.GetComponentInChildren<Image>().sprite = weaponPickup.WeaponIcon;
-        }
-        if (rightWeapon)
-        {
-            SwitchPromptR.SetActive(true);
-            SwitchPromptR.GetComponentInChildren<TMP_Text>().text = $"{InputManager.Instance.GetBind("SwitchWeaponRight")} to switch weapon to:";
-            SwitchPromptR.GetComponentInChildren<Image>().sprite = weaponPickup.WeaponIcon;
-        }
+        //if(leftWeapon)
+        //{
+        //    SwitchPromptL.SetActive(true);
+        //    SwitchPromptL.GetComponentInChildren<TMP_Text>().text = $"{InputManager.Instance.GetBind("SwitchWeaponLeft")} to switch weapon to:";
+        //    SwitchPromptL.GetComponentInChildren<Image>().sprite = weaponPickup.WeaponIcon;
+        //}
+        //if (rightWeapon)
+        //{
+        //    SwitchPromptR.SetActive(true);
+        //    SwitchPromptR.GetComponentInChildren<TMP_Text>().text = $"{InputManager.Instance.GetBind("SwitchWeaponRight")} to switch weapon to:";
+        //    SwitchPromptR.GetComponentInChildren<Image>().sprite = weaponPickup.WeaponIcon;
+        //}
     }
     void HideWeaponSwitchPrompt()
     {
@@ -80,7 +80,7 @@ public class PlayerUI : MonoBehaviour
     }
     private void OnDisable()
     {
-        _weaponHandler.OnWeaponHoverEnter -= DisplayWeaponSwitchPrompt;
-        _weaponHandler.OnWeaponHoverExit -= HideWeaponSwitchPrompt;
+        _weaponHandler.OnItemHoverEnter -= DisplayWeaponSwitchPrompt;
+        _weaponHandler.OnItemHoverExit -= HideWeaponSwitchPrompt;
     }
 }

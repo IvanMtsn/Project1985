@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5366902834986628795}
   m_Layer: 0
   m_Name: SimpleBurstWeaponPickup
-  m_TagString: WeaponPickup
+  m_TagString: ItemPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -171,8 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8fdd09be588d42428c82af5fa492fbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _itemIcon: {fileID: 0}
+  ItemPrefab: {fileID: 0}
   _currentLoadedAmmo: 0
   _currentReserveAmmo: 0
-  _weaponIcon: {fileID: 21300000, guid: 40ae1344e13c7d84a9e183a2150a0f6a, type: 3}
-  WeaponPrefab: {fileID: 8682566852438128596, guid: e85b013fadc129048b962ff305a5ce15,
-    type: 3}

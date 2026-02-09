@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NonReloadableComponent : MonoBehaviour, IAmmo, IAmmoPickupNonReloadable
+public class NonReloadableComponent : MonoBehaviour, IAmmo
 {
     [SerializeField] float _maxLoadedAmmo;
     [SerializeField] float _currentLoadedAmmo;
@@ -16,5 +16,9 @@ public class NonReloadableComponent : MonoBehaviour, IAmmo, IAmmoPickupNonReload
         _currentLoadedAmmo += loadedAmmoToUse;
 
         weaponPickup.AddAmmo(-loadedAmmoToUse);
+    }
+    public void SetAmmo(float loadedAmmo)
+    {
+        _currentLoadedAmmo = loadedAmmo;
     }
 }

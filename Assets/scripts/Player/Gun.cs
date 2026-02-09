@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public abstract class Gun : MonoBehaviour, IWeaponProperties, IItemSide
+public abstract class Gun : MonoBehaviour, IItem
 {
     [Header("ammo and cooldown and damage")]
     [SerializeField] protected float _spreadAngle;
@@ -10,23 +10,16 @@ public abstract class Gun : MonoBehaviour, IWeaponProperties, IItemSide
     [SerializeField] protected float _burstAmount;
     [SerializeField] protected float _burstCooldown;
     [SerializeField] protected float _damage;
-    public float Damage { 
-        get
-        {
-            return _damage;
-        }
-        set
-        {
-            _damage = value;
-        }
-    }
     [Header("orientation")]
     [SerializeField] protected Transform _firePoint;
     [SerializeField] protected Transform _visualFirePoint;
     [SerializeField] protected FireMode _fireMode;
+    [SerializeField] protected GameObject _itemPickup;
+    public GameObject ItemPickup => _itemPickup;
     protected bool _isBursting;
     protected float _lastTimeSinceFire = 0;
-    public bool IsDroppable { get; set; }
+    protected bool _isDroppable = true;
+    public bool IsDroppable => _isDroppable;
     public ItemSide Itemside { get; set; }
     protected IAmmo _ammoComponent;
     protected Animator _animator;

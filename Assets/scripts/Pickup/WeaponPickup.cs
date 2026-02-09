@@ -3,15 +3,12 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class WeaponPickup : MonoBehaviour
+public class WeaponPickup : Pickup
 {
     [SerializeField] float _currentLoadedAmmo;
     [SerializeField] float _currentReserveAmmo;
-    [SerializeField] Sprite _weaponIcon;
     public float CurrentLoadedAmmo => _currentLoadedAmmo;
     public float CurrentReserveAmmo => _currentReserveAmmo;
-    public UnityEngine.GameObject WeaponPrefab;
-    public Sprite WeaponIcon => _weaponIcon;
     public void SetAmmo(float currentLoadedAmmo, float currentReserveAmmo)
     {
         _currentLoadedAmmo = currentLoadedAmmo;
